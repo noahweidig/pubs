@@ -2,16 +2,25 @@ import fs from "fs";
 import fetch from "node-fetch";
 
 const indexPath = "./index.html";
+const userID = 11988712;
 
-// fail early if index.html isn't there
+const url =
+  `https://api.zotero.org/users/${userID}/publications/items?format=json&include=bib,data&style=apa&limit=200`;
+
+// load index.html early so we can error out explicitly if missing
 if (!fs.existsSync(indexPath)) {
   throw new Error("❌ index.html not found in repo root.");
 }
 
-const userID = 11988712;
-const url = `https://api.zotero.org/users/${userID}/publications/items?format=json&include=bib,data&style=apa&limit=200`;
-const items = await fetch(url).then(r => r.json());
+// ===== FIX STARTS HERE =====
+const response = await fetch(url);
 
+if (!response.ok) {
+  const message = await response.text();  // read text instead of json
+  throw new Error(`❌ Zotero API error (${response.status}): ${message}`);
+}
+
+const items = await response.json();
 const doiRegex = /\b(10\.\d{4,9}\/[-._;()/:A-Z0-9]+)\b/gi;
 const urlRegex = /(?<!href=")(https?:\/\/[^\s<]+)/gi;
 
