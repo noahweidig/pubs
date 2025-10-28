@@ -1,0 +1,8 @@
+{
+  "name": "pubs-generator",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "node-fetch": "3"
+  }
+}
