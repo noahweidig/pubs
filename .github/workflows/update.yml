@@ -11,6 +11,7 @@ permissions:
 jobs:
   update:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -18,11 +19,14 @@ jobs:
         with:
           node-version: 20
 
-      - run: npm install      # ✅ FIXED
+      - name: Install dependencies
+        run: npm install
 
-      - run: node scripts/update-pubs.js
+      - name: Run Zotero fetch + inject HTML
+        run: node scripts/update-pubs.js
 
-      - run: |
+      - name: Commit changes
+        run: |
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
           git add index.html
