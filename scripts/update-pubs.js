@@ -14,13 +14,18 @@ if (!fs.existsSync(indexPath)) {
 
 // ===== FIX STARTS HERE =====
 const response = await fetch(url);
+const payload = await response.text();
 
 if (!response.ok) {
-  const message = await response.text();  // read text instead of json
-  throw new Error(`❌ Zotero API error (${response.status}): ${message}`);
+  throw new Error(`❌ Zotero API error (${response.status}): ${payload}`);
 }
 
-const items = await response.json();
+let items;
+try {
+  items = JSON.parse(payload);
+} catch (err) {
+  throw new Error(`❌ Unexpected Zotero API response: ${payload}`);
+}
 const doiRegex = /\b(10\.\d{4,9}\/[-._;()/:A-Z0-9]+)\b/gi;
 const urlRegex = /(?<!href=")(https?:\/\/[^\s<]+)/gi;
 
