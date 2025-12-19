@@ -15,31 +15,47 @@ if (!fs.existsSync(indexPath)) {
 // ===== FIX STARTS HERE =====
 const fetchWithRetry = async (url, { attempts = 3, delayMs = 1_000 } = {}) => {
   let lastPayload = "";
+  let lastError;
 
   for (let attempt = 1; attempt <= attempts; attempt++) {
-    const response = await fetch(url);
-    const payload = await response.text();
+    try {
+      const response = await fetch(url);
+      const payload = await response.text();
 
-    if (response.ok) {
-      return payload;
+      if (response.ok) {
+        return payload;
+      }
+
+      lastPayload = payload;
+
+      // Retry transient server errors with exponential backoff
+      if (response.status >= 500 && attempt < attempts) {
+        const wait = delayMs * attempt;
+        console.warn(
+          `⚠️ Zotero API error (${response.status}) on attempt ${attempt}/${attempts}; retrying in ${wait}ms...`
+        );
+        await new Promise(resolve => setTimeout(resolve, wait));
+        continue;
+      }
+
+      throw new Error(`❌ Zotero API error (${response.status}): ${payload}`);
+    } catch (err) {
+      lastError = err;
+
+      if (attempt < attempts) {
+        const wait = delayMs * attempt;
+        console.warn(
+          `⚠️ Zotero API request failed on attempt ${attempt}/${attempts} (${err?.message ?? err}); retrying in ${wait}ms...`
+        );
+        await new Promise(resolve => setTimeout(resolve, wait));
+        continue;
+      }
+
+      throw new Error(`❌ Zotero API request failed after ${attempts} attempts: ${err?.message ?? err}`);
     }
-
-    lastPayload = payload;
-
-    // Retry transient server errors with exponential backoff
-    if (response.status >= 500 && attempt < attempts) {
-      const wait = delayMs * attempt;
-      console.warn(
-        `⚠️ Zotero API error (${response.status}) on attempt ${attempt}/${attempts}; retrying in ${wait}ms...`
-      );
-      await new Promise(resolve => setTimeout(resolve, wait));
-      continue;
-    }
-
-    throw new Error(`❌ Zotero API error (${response.status}): ${payload}`);
   }
 
-  throw new Error(`❌ Zotero API error after ${attempts} attempts: ${lastPayload}`);
+  throw new Error(`❌ Zotero API error after ${attempts} attempts: ${lastPayload || lastError}`);
 };
 
 const payload = await fetchWithRetry(url);
