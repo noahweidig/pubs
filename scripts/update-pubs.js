@@ -13,12 +13,36 @@ if (!fs.existsSync(indexPath)) {
 }
 
 // ===== FIX STARTS HERE =====
-const response = await fetch(url);
-const payload = await response.text();
+const fetchWithRetry = async (url, { attempts = 3, delayMs = 1_000 } = {}) => {
+  let lastPayload = "";
 
-if (!response.ok) {
-  throw new Error(`❌ Zotero API error (${response.status}): ${payload}`);
-}
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    const response = await fetch(url);
+    const payload = await response.text();
+
+    if (response.ok) {
+      return payload;
+    }
+
+    lastPayload = payload;
+
+    // Retry transient server errors with exponential backoff
+    if (response.status >= 500 && attempt < attempts) {
+      const wait = delayMs * attempt;
+      console.warn(
+        `⚠️ Zotero API error (${response.status}) on attempt ${attempt}/${attempts}; retrying in ${wait}ms...`
+      );
+      await new Promise(resolve => setTimeout(resolve, wait));
+      continue;
+    }
+
+    throw new Error(`❌ Zotero API error (${response.status}): ${payload}`);
+  }
+
+  throw new Error(`❌ Zotero API error after ${attempts} attempts: ${lastPayload}`);
+};
+
+const payload = await fetchWithRetry(url);
 
 let items;
 try {
