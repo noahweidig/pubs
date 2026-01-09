@@ -49,9 +49,9 @@ This forces an update immediately instead of waiting 14 days.
 
 ---
 
-## 🌐 Embed into Google Sites
+## 🌐 Embed into Personal Website
 
-Google Sites → Insert → Embed → URL  
+Personal Site → Insert → Embed → URL  
 Paste this URL:
 
 ```
