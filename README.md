@@ -55,7 +55,7 @@ Google Sites → Insert → Embed → URL
 Paste this URL:
 
 ```
-https://YOUR_USERNAME.github.io/zotero-pubs
+https://YOUR_USERNAME.github.io/Zotero
 ```
 
 ---
