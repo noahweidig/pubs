@@ -1,0 +1,48 @@
+/*
+ * Default Theme
+ *
+ * Matches the original inline styles shipped with this repository.
+ * Use this file as a starting point when creating your own theme.
+ *
+ * Usage – replace the <style> block in index.html with:
+ *   <link rel="stylesheet" href="themes/default.css">
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  max-width: 1400px;
+  margin: 40px auto;
+}
+
+#pubs strong {
+  color: teal;
+  font-weight: bold;
+}
+
+.type-heading {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-top: 1em;
+  margin-bottom: 0.4em;
+}
+
+.entry {
+  margin-bottom: 0.6em;
+}
+
+details {
+  margin-top: 0.2em;
+  margin-left: 1em;
+}
+
+summary {
+  cursor: pointer;
+  color: #555;
+  font-style: italic;
+}
+
+a {
+  color: teal;
+}
