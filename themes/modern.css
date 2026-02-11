@@ -1,0 +1,141 @@
+/*
+ * Modern Theme
+ *
+ * A contemporary card-based layout with soft shadows, rounded
+ * corners, and smooth interactions. Ideal for personal academic
+ * websites and portfolios.
+ *
+ * Usage – replace the <style> block in index.html with:
+ *   <link rel="stylesheet" href="themes/modern.css">
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #334155;
+  max-width: 960px;
+  margin: 48px auto;
+  padding: 0 24px;
+  background: #f8fafc;
+}
+
+/* ---- Section headings ---- */
+.type-heading {
+  font-size: 1.1em;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin: 2.4em 0 1em;
+  padding-bottom: 0.5em;
+  border-bottom: 3px solid #6366f1;
+  display: inline-block;
+}
+
+/* ---- Entry card ---- */
+.entry {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 1.2em 1.4em;
+  margin-bottom: 1em;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.entry:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+/* ---- Highlighted author ---- */
+#pubs strong {
+  color: #6366f1;
+  font-weight: 600;
+}
+
+/* ---- Links ---- */
+a {
+  color: #6366f1;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+
+a:hover,
+a:focus {
+  color: #4338ca;
+  text-decoration: underline;
+}
+
+/* ---- Abstract toggle ---- */
+details {
+  margin-top: 0.6em;
+}
+
+summary {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  font-size: 0.85em;
+  font-weight: 500;
+  color: #6366f1;
+  padding: 0.3em 0.7em;
+  border-radius: 6px;
+  background: #eef2ff;
+  transition: background 0.15s, color 0.15s;
+}
+
+summary:hover {
+  background: #e0e7ff;
+  color: #4338ca;
+}
+
+details[open] summary {
+  margin-bottom: 0.6em;
+}
+
+details p {
+  font-size: 0.9em;
+  color: #475569;
+  line-height: 1.7;
+  margin: 0;
+  padding: 0.8em 1em;
+  background: #f1f5f9;
+  border-radius: 8px;
+  border-left: 4px solid #6366f1;
+}
+
+/* ---- CSL overrides ---- */
+.csl-bib-body {
+  line-height: 1.7 !important;
+  padding-left: 0 !important;
+  text-indent: 0 !important;
+}
+
+.csl-entry {
+  padding-left: 0;
+  text-indent: 0;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 640px) {
+  body {
+    margin: 24px auto;
+    padding: 0 16px;
+  }
+
+  .entry {
+    padding: 1em;
+  }
+}
