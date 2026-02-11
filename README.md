@@ -120,7 +120,7 @@ Six ready-made themes live in the `themes/` directory. To apply one, **replace**
 | **Academic** | `themes/academic.css` | Classic serif typography with ruled headings and a print-friendly feel. |
 | **Modern** | `themes/modern.css` | Card-based layout with soft shadows, rounded corners, and hover lift effects. |
 | **Dark** | `themes/dark.css` | WCAG AA dark mode with sky-blue accents — easy on the eyes at night. |
-| **Minimal** | `themes/minimal.css` | Ultra-clean design with generous whitespace and muted colour. |
+| **Minimal** | `themes/minimal.css` | Ultra-clean design with generous whitespace and muted color. |
 | **Nature** | `themes/nature.css` | Inspired by leading scientific journals — structured, authoritative, and refined. |
 
 ### Customising a Theme
