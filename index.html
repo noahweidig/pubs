@@ -9,6 +9,60 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
   <style>
+    :root {
+      /* Colors */
+      --bg-color: #0f172a; /* Slate 900 */
+      --text-color: #f8fafc; /* Slate 50 */
+      --text-muted: #cbd5e1; /* Slate 300 - Increased contrast */
+      --text-faint: #64748b; /* Slate 500 - Increased contrast */
+
+      /* Accents (Cyan, Emerald, Amber) */
+      --accent-primary: #22d3ee;   /* Cyan 400 */
+      --accent-secondary: #34d399; /* Emerald 400 */
+      --accent-tertiary: #fb923c;  /* Orange 400 */
+
+      /* Mesh Gradients */
+      --mesh-bg: #0f172a;
+      --mesh-c1: #164e63; /* Cyan 900 */
+      --mesh-c2: #064e3b; /* Emerald 900 */
+      --mesh-c3: #1e1b4b; /* Indigo 950 */
+
+      /* UI Elements */
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --card-hover-bg: rgba(255, 255, 255, 0.06);
+      --panel-bg: rgba(0, 0, 0, 0.2);
+      --link-color: #67e8f9; /* Cyan 300 */
+      --link-hover: #f97316; /* Orange 500 */
+    }
+
+    .light-theme {
+      /* Colors */
+      --bg-color: #f8fafc; /* Slate 50 */
+      --text-color: #0f172a; /* Slate 900 */
+      --text-muted: #475569; /* Slate 600 */
+      --text-faint: #94a3b8; /* Slate 400 */
+
+      /* Accents (Darker for light bg) */
+      --accent-primary: #0891b2;   /* Cyan 600 */
+      --accent-secondary: #059669; /* Emerald 600 */
+      --accent-tertiary: #ea580c;  /* Orange 600 */
+
+      /* Mesh Gradients */
+      --mesh-bg: #f0f9ff;
+      --mesh-c1: #bae6fd; /* Sky 200 */
+      --mesh-c2: #a7f3d0; /* Emerald 200 */
+      --mesh-c3: #e0f2fe; /* Sky 100 */
+
+      /* UI Elements */
+      --card-bg: rgba(255, 255, 255, 0.7);
+      --card-border: rgba(15, 23, 42, 0.1);
+      --card-hover-bg: rgba(255, 255, 255, 0.95);
+      --panel-bg: rgba(0, 0, 0, 0.03);
+      --link-color: #0891b2;
+      --link-hover: #ea580c;
+    }
+
     /* ═══════════════════════════════════════════════════════════════
        RESET & BASE
        ═══════════════════════════════════════════════════════════════ */
@@ -22,10 +76,11 @@
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #0a0a0f;
-      color: #e4e4e7;
+      background: var(--bg-color);
+      color: var(--text-color);
       line-height: 1.7;
       overflow-x: hidden;
+      transition: background 0.3s, color 0.3s;
     }
 
     /* ═══════════════════════════════════════════════════════════════
@@ -47,13 +102,13 @@
       left: -25vmax;
       background: conic-gradient(
         from 220deg at 50% 50%,
-        #0a0a0f 0deg,
-        #1a0525 60deg,
-        #2d1054 120deg,
-        #0a0a0f 180deg,
-        #0f1a2e 240deg,
-        #1a0525 300deg,
-        #0a0a0f 360deg
+        var(--bg-color) 0deg,
+        var(--mesh-c1) 60deg,
+        var(--mesh-c2) 120deg,
+        var(--bg-color) 180deg,
+        var(--mesh-c3) 240deg,
+        var(--mesh-c1) 300deg,
+        var(--bg-color) 360deg
       );
       animation: rotateMesh 40s linear infinite;
     }
@@ -62,10 +117,11 @@
       content: '';
       position: absolute;
       inset: 0;
+      /* Note: opacity values are hardcoded here for now, could be vars if needed */
       background:
-        radial-gradient(ellipse 80% 50% at 20% 80%, rgba(139, 92, 246, 0.08), transparent),
-        radial-gradient(ellipse 60% 40% at 80% 20%, rgba(244, 114, 182, 0.06), transparent),
-        radial-gradient(ellipse 50% 60% at 50% 50%, rgba(251, 191, 36, 0.04), transparent);
+        radial-gradient(ellipse 80% 50% at 20% 80%, color-mix(in srgb, var(--accent-primary), transparent 92%), transparent),
+        radial-gradient(ellipse 60% 40% at 80% 20%, color-mix(in srgb, var(--accent-secondary), transparent 94%), transparent),
+        radial-gradient(ellipse 50% 60% at 50% 50%, color-mix(in srgb, var(--accent-tertiary), transparent 96%), transparent);
     }
 
     @keyframes rotateMesh {
@@ -109,20 +165,20 @@
     }
 
     .hero-glow--purple {
-      background: #8b5cf6;
+      background: var(--accent-primary);
       top: 10%;
       left: 20%;
     }
 
     .hero-glow--rose {
-      background: #f472b6;
+      background: var(--accent-secondary);
       top: 30%;
       right: 15%;
       animation-delay: -3s;
     }
 
     .hero-glow--amber {
-      background: #fbbf24;
+      background: var(--accent-tertiary);
       bottom: 15%;
       left: 40%;
       animation-delay: -5s;
@@ -140,27 +196,28 @@
     }
 
     .hero-label {
-      font-size: 0.8rem;
+      font-size: 0.9rem;
       font-weight: 600;
       letter-spacing: 0.25em;
       text-transform: uppercase;
-      color: rgba(244, 114, 182, 0.8);
+      color: var(--accent-secondary);
+      opacity: 0.8;
       margin-bottom: 1.5rem;
     }
 
     .hero-name {
       font-family: 'Newsreader', Georgia, serif;
-      font-size: clamp(3rem, 8vw, 6.5rem);
+      font-size: clamp(2.5rem, 6vw, 5rem);
       font-weight: 500;
       line-height: 1.05;
       letter-spacing: -0.02em;
       background: linear-gradient(
         135deg,
-        #e4e4e7 0%,
-        #c4b5fd 25%,
-        #f9a8d4 50%,
-        #fcd34d 75%,
-        #e4e4e7 100%
+        var(--text-color) 0%,
+        var(--accent-primary) 25%,
+        var(--accent-secondary) 50%,
+        var(--accent-tertiary) 75%,
+        var(--text-color) 100%
       );
       background-size: 200% auto;
       -webkit-background-clip: text;
@@ -176,9 +233,9 @@
     }
 
     .hero-subtitle {
-      font-size: clamp(1rem, 2.5vw, 1.35rem);
+      font-size: clamp(1.2rem, 3vw, 1.6rem);
       font-weight: 300;
-      color: rgba(228, 228, 231, 0.55);
+      color: var(--text-muted);
       max-width: 650px;
       margin: 0 auto 2.5rem;
       line-height: 1.6;
@@ -193,20 +250,20 @@
     }
 
     .hero-tag {
-      font-size: 0.75rem;
+      font-size: 0.85rem;
       font-weight: 500;
       letter-spacing: 0.05em;
       padding: 0.4rem 1rem;
       border-radius: 100px;
-      background: rgba(139, 92, 246, 0.1);
-      border: 1px solid rgba(139, 92, 246, 0.2);
-      color: rgba(196, 181, 253, 0.8);
+      background: color-mix(in srgb, var(--accent-primary), transparent 90%);
+      border: 1px solid color-mix(in srgb, var(--accent-primary), transparent 80%);
+      color: var(--accent-primary);
       transition: all 0.3s ease;
     }
 
     .hero-tag:hover {
-      background: rgba(139, 92, 246, 0.2);
-      border-color: rgba(139, 92, 246, 0.4);
+      background: color-mix(in srgb, var(--accent-primary), transparent 80%);
+      border-color: color-mix(in srgb, var(--accent-primary), transparent 60%);
       transform: translateY(-1px);
     }
 
@@ -219,7 +276,7 @@
       flex-direction: column;
       align-items: center;
       gap: 0.5rem;
-      color: rgba(228, 228, 231, 0.25);
+      color: var(--text-faint);
       font-size: 0.7rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
@@ -255,7 +312,7 @@
       width: 60px;
       height: 2px;
       margin: 0 auto 4rem;
-      background: linear-gradient(90deg, #8b5cf6, #f472b6, #fbbf24);
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
       border-radius: 2px;
     }
 
@@ -276,7 +333,7 @@
       margin-bottom: 1.5rem;
       padding-bottom: 0.75rem;
       position: relative;
-      color: #f4f4f5;
+      color: var(--text-color);
     }
 
     .type-heading::after {
@@ -286,7 +343,7 @@
       left: 0;
       width: 40px;
       height: 2px;
-      background: linear-gradient(90deg, #8b5cf6, #f472b6);
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
       border-radius: 2px;
       transition: width 0.4s ease;
     }
@@ -304,8 +361,8 @@
       position: relative;
       margin-bottom: 1.5rem;
       padding: 1.5rem;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       border-radius: 16px;
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       backdrop-filter: blur(10px);
@@ -313,11 +370,11 @@
     }
 
     .entry:hover {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: rgba(139, 92, 246, 0.15);
+      background: var(--card-hover-bg);
+      border-color: color-mix(in srgb, var(--accent-primary), transparent 85%);
       transform: translateY(-2px);
       box-shadow:
-        0 8px 32px rgba(139, 92, 246, 0.08),
+        0 8px 32px color-mix(in srgb, var(--accent-primary), transparent 92%),
         0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
@@ -329,7 +386,7 @@
       top: 1.25rem;
       bottom: 1.25rem;
       width: 2px;
-      background: linear-gradient(180deg, #8b5cf6, #f472b6, #fbbf24);
+      background: linear-gradient(180deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
       border-radius: 2px;
       opacity: 0;
       transition: opacity 0.4s ease;
@@ -344,8 +401,9 @@
       line-height: 1.8 !important;
       padding-left: 0 !important;
       text-indent: 0 !important;
-      font-size: 0.95rem;
-      color: rgba(228, 228, 231, 0.8);
+      font-size: 1.05rem;
+      color: var(--text-color);
+      opacity: 0.9;
     }
 
     .csl-entry {
@@ -355,32 +413,33 @@
 
     .csl-entry i {
       font-family: 'Newsreader', Georgia, serif;
-      color: rgba(249, 168, 212, 0.85);
+      color: var(--accent-secondary);
+      opacity: 0.9;
     }
 
     /* Author name highlight */
     #pubs strong {
-      color: #c4b5fd;
+      color: var(--accent-primary);
       font-weight: 600;
       transition: color 0.3s ease;
     }
 
     .entry:hover #pubs strong,
     .entry:hover strong {
-      color: #ddd6fe;
+      color: color-mix(in srgb, var(--accent-primary), white 20%);
     }
 
     /* Links */
     a {
-      color: rgba(196, 181, 253, 0.7);
+      color: var(--link-color);
       text-decoration: none;
-      border-bottom: 1px solid rgba(196, 181, 253, 0.15);
+      border-bottom: 1px solid color-mix(in srgb, var(--link-color), transparent 80%);
       transition: all 0.3s ease;
     }
 
     a:hover {
-      color: #f9a8d4;
-      border-bottom-color: rgba(249, 168, 212, 0.4);
+      color: var(--link-hover);
+      border-bottom-color: color-mix(in srgb, var(--link-hover), transparent 60%);
     }
 
     /* Abstract details/summary */
@@ -390,15 +449,15 @@
 
     summary {
       cursor: pointer;
-      font-size: 0.8rem;
+      font-size: 0.9rem;
       font-weight: 600;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: rgba(139, 92, 246, 0.6);
+      color: color-mix(in srgb, var(--accent-primary), transparent 40%);
       padding: 0.5rem 1rem;
       border-radius: 8px;
-      background: rgba(139, 92, 246, 0.06);
-      border: 1px solid rgba(139, 92, 246, 0.1);
+      background: color-mix(in srgb, var(--accent-primary), transparent 94%);
+      border: 1px solid color-mix(in srgb, var(--accent-primary), transparent 90%);
       transition: all 0.3s ease;
       display: inline-flex;
       align-items: center;
@@ -421,20 +480,20 @@
     }
 
     summary:hover {
-      background: rgba(139, 92, 246, 0.12);
-      border-color: rgba(139, 92, 246, 0.25);
-      color: rgba(196, 181, 253, 0.9);
+      background: color-mix(in srgb, var(--accent-primary), transparent 88%);
+      border-color: color-mix(in srgb, var(--accent-primary), transparent 75%);
+      color: var(--accent-primary);
     }
 
     details p {
       margin-top: 1rem;
       padding: 1.25rem;
-      font-size: 0.88rem;
+      font-size: 1rem;
       line-height: 1.85;
-      color: rgba(228, 228, 231, 0.55);
-      background: rgba(0, 0, 0, 0.2);
+      color: var(--text-muted);
+      background: var(--panel-bg);
       border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
       animation: fadeInAbstract 0.3s ease;
     }
 
@@ -451,12 +510,12 @@
       z-index: 1;
       text-align: center;
       padding: 3rem 2rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      border-top: 1px solid var(--card-border);
     }
 
     .footer p {
-      font-size: 0.75rem;
-      color: rgba(228, 228, 231, 0.2);
+      font-size: 0.85rem;
+      color: var(--text-faint);
       letter-spacing: 0.05em;
     }
 
@@ -464,7 +523,7 @@
       display: inline-block;
       width: 30px;
       height: 2px;
-      background: linear-gradient(90deg, #8b5cf6, #f472b6, #fbbf24);
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
       border-radius: 2px;
       margin-bottom: 1rem;
     }
@@ -525,25 +584,65 @@
     }
 
     ::-webkit-scrollbar-track {
-      background: #0a0a0f;
+      background: var(--bg-color);
     }
 
     ::-webkit-scrollbar-thumb {
-      background: rgba(139, 92, 246, 0.3);
+      background: color-mix(in srgb, var(--accent-primary), transparent 70%);
       border-radius: 4px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-      background: rgba(139, 92, 246, 0.5);
+      background: color-mix(in srgb, var(--accent-primary), transparent 50%);
     }
 
     /* ═══════════════════════════════════════════════════════════════
        SELECTION
        ═══════════════════════════════════════════════════════════════ */
     ::selection {
-      background: rgba(139, 92, 246, 0.3);
-      color: #f4f4f5;
+      background: color-mix(in srgb, var(--accent-primary), transparent 70%);
+      color: var(--text-color);
     }
+
+    /* ═══════════════════════════════════════════════════════════════
+       THEME TOGGLE
+       ═══════════════════════════════════════════════════════════════ */
+    #theme-toggle {
+      position: fixed;
+      top: 2rem;
+      right: 2rem;
+      z-index: 100;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-color);
+      padding: 0.75rem;
+      border-radius: 50%;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #theme-toggle:hover {
+      background: var(--card-hover-bg);
+      transform: scale(1.1);
+      color: var(--accent-primary);
+    }
+
+    #theme-toggle svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    /* Logic for showing/hiding icons */
+    .sun-icon { display: block; }
+    .moon-icon { display: none; }
+
+    .light-theme .sun-icon { display: none; }
+    .light-theme .moon-icon { display: block; }
   </style>
 </head>
 <body>
@@ -551,6 +650,19 @@
   <!-- Animated background -->
   <div class="bg-mesh"></div>
   <div class="grain"></div>
+
+  <!-- Theme Toggle -->
+  <button id="theme-toggle" aria-label="Toggle theme">
+    <!-- Sun Icon (shown in dark mode) -->
+    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="5"></circle>
+      <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+    </svg>
+    <!-- Moon Icon (shown in light mode) -->
+    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </svg>
+  </button>
 
   <!-- ═══════════ HERO ═══════════ -->
   <header class="hero">
@@ -653,5 +765,22 @@ For fire managers in the southern region, this study supports the use of prescri
     <p>Noah C. Weidig &middot; Updated automatically from Zotero</p>
   </footer>
 
+  <script>
+    // Theme toggle logic
+    const toggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    // Check for saved preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+      body.classList.add('light-theme');
+    }
+
+    toggle.addEventListener('click', () => {
+      body.classList.toggle('light-theme');
+      const isLight = body.classList.contains('light-theme');
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    });
+  </script>
 </body>
 </html>
