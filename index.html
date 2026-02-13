@@ -96,21 +96,22 @@
     .bg-mesh::before {
       content: '';
       position: absolute;
-      width: 150vmax;
-      height: 150vmax;
-      top: -50vmax;
-      left: -25vmax;
-      background: conic-gradient(
-        from 220deg at 50% 50%,
-        var(--bg-color) 0deg,
-        var(--mesh-c1) 60deg,
-        var(--mesh-c2) 120deg,
-        var(--bg-color) 180deg,
-        var(--mesh-c3) 240deg,
-        var(--mesh-c1) 300deg,
-        var(--bg-color) 360deg
-      );
-      animation: rotateMesh 40s linear infinite;
+      inset: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center,
+        var(--mesh-c1) 0%,
+        var(--mesh-c2) 30%,
+        var(--mesh-c3) 60%,
+        var(--bg-color) 100%);
+      filter: blur(120px);
+      opacity: 0.5;
+      animation: pulseGradient 15s ease infinite alternate;
+    }
+
+    @keyframes pulseGradient {
+      0% { transform: scale(1); opacity: 0.4; }
+      100% { transform: scale(1.1); opacity: 0.6; }
     }
 
     .bg-mesh::after {
@@ -637,6 +638,37 @@
       height: 1.25rem;
     }
 
+    #back-button {
+      position: fixed;
+      top: 2rem;
+      left: 2rem;
+      z-index: 100;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-color);
+      padding: 0.75rem;
+      border-radius: 50%;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+
+    #back-button:hover {
+      background: var(--card-hover-bg);
+      transform: scale(1.1);
+      color: var(--accent-primary);
+    }
+
+    #back-button svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
     /* Logic for showing/hiding icons */
     .sun-icon { display: block; }
     .moon-icon { display: none; }
@@ -650,6 +682,13 @@
   <!-- Animated background -->
   <div class="bg-mesh"></div>
   <div class="grain"></div>
+
+  <!-- Back Button -->
+  <a id="back-button" href="https://noahweidig.com" aria-label="Go back">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/>
+    </svg>
+  </a>
 
   <!-- Theme Toggle -->
   <button id="theme-toggle" aria-label="Toggle theme">
