@@ -1,26 +1,594 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noah C. Weidig — Publications</title>
+  <meta name="description" content="Publications and research by Noah C. Weidig — wildfire ecology, landscape dynamics, and the wildland-urban interface.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Open Sans', sans-serif; max-width: 1400px; margin: 40px auto; }
-    #pubs strong { color: teal; font-weight: bold; }
-    .type-heading { font-size: 1.2em; font-weight: bold; margin-top: 1em; margin-bottom: 0.4em; }
-    .entry { margin-bottom: 0.6em; }
-    details { margin-top: 0.2em; margin-left: 1em; }
-    summary { cursor: pointer; color: #555; font-style: italic; }
-    a { color: teal; }
+    /* ═══════════════════════════════════════════════════════════════
+       RESET & BASE
+       ═══════════════════════════════════════════════════════════════ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0a0a0f;
+      color: #e4e4e7;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       ANIMATED BACKGROUND
+       ═══════════════════════════════════════════════════════════════ */
+    .bg-mesh {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .bg-mesh::before {
+      content: '';
+      position: absolute;
+      width: 150vmax;
+      height: 150vmax;
+      top: -50vmax;
+      left: -25vmax;
+      background: conic-gradient(
+        from 220deg at 50% 50%,
+        #0a0a0f 0deg,
+        #1a0525 60deg,
+        #2d1054 120deg,
+        #0a0a0f 180deg,
+        #0f1a2e 240deg,
+        #1a0525 300deg,
+        #0a0a0f 360deg
+      );
+      animation: rotateMesh 40s linear infinite;
+    }
+
+    .bg-mesh::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 80%, rgba(139, 92, 246, 0.08), transparent),
+        radial-gradient(ellipse 60% 40% at 80% 20%, rgba(244, 114, 182, 0.06), transparent),
+        radial-gradient(ellipse 50% 60% at 50% 50%, rgba(251, 191, 36, 0.04), transparent);
+    }
+
+    @keyframes rotateMesh {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Grain overlay */
+    .grain {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.3;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px 256px;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       HERO
+       ═══════════════════════════════════════════════════════════════ */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .hero-glow {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.15;
+      animation: pulseGlow 8s ease-in-out infinite alternate;
+    }
+
+    .hero-glow--purple {
+      background: #8b5cf6;
+      top: 10%;
+      left: 20%;
+    }
+
+    .hero-glow--rose {
+      background: #f472b6;
+      top: 30%;
+      right: 15%;
+      animation-delay: -3s;
+    }
+
+    .hero-glow--amber {
+      background: #fbbf24;
+      bottom: 15%;
+      left: 40%;
+      animation-delay: -5s;
+      opacity: 0.08;
+    }
+
+    @keyframes pulseGlow {
+      0% { transform: scale(1) translate(0, 0); }
+      100% { transform: scale(1.2) translate(20px, -15px); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(244, 114, 182, 0.8);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-name {
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      font-weight: 500;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      background: linear-gradient(
+        135deg,
+        #e4e4e7 0%,
+        #c4b5fd 25%,
+        #f9a8d4 50%,
+        #fcd34d 75%,
+        #e4e4e7 100%
+      );
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 6s ease-in-out infinite;
+      margin-bottom: 1.5rem;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { background-position: 0% center; }
+      50% { background-position: 200% center; }
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1rem, 2.5vw, 1.35rem);
+      font-weight: 300;
+      color: rgba(228, 228, 231, 0.55);
+      max-width: 650px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.6;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+      margin-bottom: 3rem;
+    }
+
+    .hero-tag {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      color: rgba(196, 181, 253, 0.8);
+      transition: all 0.3s ease;
+    }
+
+    .hero-tag:hover {
+      background: rgba(139, 92, 246, 0.2);
+      border-color: rgba(139, 92, 246, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .scroll-cue {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: rgba(228, 228, 231, 0.25);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      animation: bobDown 2s ease-in-out infinite;
+    }
+
+    .scroll-cue svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    @keyframes bobDown {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       MAIN CONTENT AREA
+       ═══════════════════════════════════════════════════════════════ */
+    .main-wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+    }
+
+    /* Divider line between hero and content */
+    .section-divider {
+      width: 60px;
+      height: 2px;
+      margin: 0 auto 4rem;
+      background: linear-gradient(90deg, #8b5cf6, #f472b6, #fbbf24);
+      border-radius: 2px;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       PUBLICATION SECTIONS
+       ═══════════════════════════════════════════════════════════════ */
+    #pubs {
+      position: relative;
+    }
+
+    /* Section headings (Publications, Presentations, etc.) */
+    .type-heading {
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 1.75rem;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      margin-top: 4rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      position: relative;
+      color: #f4f4f5;
+    }
+
+    .type-heading::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 40px;
+      height: 2px;
+      background: linear-gradient(90deg, #8b5cf6, #f472b6);
+      border-radius: 2px;
+      transition: width 0.4s ease;
+    }
+
+    .type-heading:hover::after {
+      width: 80px;
+    }
+
+    .type-heading:first-child {
+      margin-top: 0;
+    }
+
+    /* Individual entries */
+    .entry {
+      position: relative;
+      margin-bottom: 1.5rem;
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 16px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .entry:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(139, 92, 246, 0.15);
+      transform: translateY(-2px);
+      box-shadow:
+        0 8px 32px rgba(139, 92, 246, 0.08),
+        0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Gradient accent bar on left */
+    .entry::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 1.25rem;
+      bottom: 1.25rem;
+      width: 2px;
+      background: linear-gradient(180deg, #8b5cf6, #f472b6, #fbbf24);
+      border-radius: 2px;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .entry:hover::before {
+      opacity: 1;
+    }
+
+    /* CSL bibliography formatting */
+    .csl-bib-body {
+      line-height: 1.8 !important;
+      padding-left: 0 !important;
+      text-indent: 0 !important;
+      font-size: 0.95rem;
+      color: rgba(228, 228, 231, 0.8);
+    }
+
+    .csl-entry {
+      text-indent: 0 !important;
+      padding-left: 0 !important;
+    }
+
+    .csl-entry i {
+      font-family: 'Newsreader', Georgia, serif;
+      color: rgba(249, 168, 212, 0.85);
+    }
+
+    /* Author name highlight */
+    #pubs strong {
+      color: #c4b5fd;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .entry:hover #pubs strong,
+    .entry:hover strong {
+      color: #ddd6fe;
+    }
+
+    /* Links */
+    a {
+      color: rgba(196, 181, 253, 0.7);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(196, 181, 253, 0.15);
+      transition: all 0.3s ease;
+    }
+
+    a:hover {
+      color: #f9a8d4;
+      border-bottom-color: rgba(249, 168, 212, 0.4);
+    }
+
+    /* Abstract details/summary */
+    details {
+      margin-top: 1rem;
+    }
+
+    summary {
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(139, 92, 246, 0.6);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      background: rgba(139, 92, 246, 0.06);
+      border: 1px solid rgba(139, 92, 246, 0.1);
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      list-style: none;
+      user-select: none;
+    }
+
+    summary::-webkit-details-marker { display: none; }
+
+    summary::before {
+      content: '→';
+      display: inline-block;
+      transition: transform 0.3s ease;
+      font-size: 0.75rem;
+    }
+
+    details[open] summary::before {
+      transform: rotate(90deg);
+    }
+
+    summary:hover {
+      background: rgba(139, 92, 246, 0.12);
+      border-color: rgba(139, 92, 246, 0.25);
+      color: rgba(196, 181, 253, 0.9);
+    }
+
+    details p {
+      margin-top: 1rem;
+      padding: 1.25rem;
+      font-size: 0.88rem;
+      line-height: 1.85;
+      color: rgba(228, 228, 231, 0.55);
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      animation: fadeInAbstract 0.3s ease;
+    }
+
+    @keyframes fadeInAbstract {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════════════════════ */
+    .footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .footer p {
+      font-size: 0.75rem;
+      color: rgba(228, 228, 231, 0.2);
+      letter-spacing: 0.05em;
+    }
+
+    .footer-gradient {
+      display: inline-block;
+      width: 30px;
+      height: 2px;
+      background: linear-gradient(90deg, #8b5cf6, #f472b6, #fbbf24);
+      border-radius: 2px;
+      margin-bottom: 1rem;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       RESPONSIVE
+       ═══════════════════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .main-wrapper {
+        padding: 0 1.25rem 4rem;
+      }
+
+      .entry {
+        padding: 1.25rem;
+        border-radius: 12px;
+      }
+
+      .type-heading {
+        font-size: 1.5rem;
+        margin-top: 3rem;
+      }
+
+      .hero-glow {
+        width: 300px;
+        height: 300px;
+        filter: blur(80px);
+      }
+
+      .hero {
+        min-height: 90vh;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-name {
+        font-size: 2.5rem;
+      }
+
+      .hero-subtitle {
+        font-size: 0.95rem;
+      }
+
+      .entry {
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .csl-bib-body {
+        font-size: 0.88rem;
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       SCROLLBAR
+       ═══════════════════════════════════════════════════════════════ */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #0a0a0f;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(139, 92, 246, 0.3);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(139, 92, 246, 0.5);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       SELECTION
+       ═══════════════════════════════════════════════════════════════ */
+    ::selection {
+      background: rgba(139, 92, 246, 0.3);
+      color: #f4f4f5;
+    }
   </style>
 </head>
 <body>
-<div id="pubs">
+
+  <!-- Animated background -->
+  <div class="bg-mesh"></div>
+  <div class="grain"></div>
+
+  <!-- ═══════════ HERO ═══════════ -->
+  <header class="hero">
+    <div class="hero-glow hero-glow--purple"></div>
+    <div class="hero-glow hero-glow--rose"></div>
+    <div class="hero-glow hero-glow--amber"></div>
+
+    <div class="hero-content">
+      <p class="hero-label">Research &amp; Publications</p>
+      <h1 class="hero-name">Noah C. Weidig</h1>
+      <p class="hero-subtitle">
+        Investigating wildfire dynamics, woody cover expansion, and landscape change across the eastern United States.
+      </p>
+      <div class="hero-tags">
+        <span class="hero-tag">Wildfire Ecology</span>
+        <span class="hero-tag">Landscape Dynamics</span>
+        <span class="hero-tag">Wildland-Urban Interface</span>
+        <span class="hero-tag">Forest Management</span>
+      </div>
+    </div>
+
+    <div class="scroll-cue">
+      <span>Scroll</span>
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+    </div>
+  </header>
+
+  <!-- ═══════════ PUBLICATIONS ═══════════ -->
+  <main class="main-wrapper">
+    <div class="section-divider"></div>
+
+    <div id="pubs">
   <!-- START PUBS -->
 <div class="type-heading">Publications</div><div class="entry"><div class="csl-bib-body" style="line-height: 2; padding-left: 1em; text-indent:-1em;">
   <div class="csl-entry">Ivey, M. A., <strong>Weidig, N. C.</strong>, Ivory, A. A., &amp; Donovan, V. M. (2026). Regional differences in infilling and land-use conversion characterize woody cover increases across the Eastern United States. <i>Forest Ecology and Management</i>, <i>603</i>, 123446. <a href="https://doi.org/" target="_blank">https://doi.org/</a><a href="https://doi.org/10.1016/j.foreco.2025.123446" target="_blank">10.1016/j.foreco.2025.123446</a></div>
 </div><details><summary>Abstract</summary><p>Trees and shrubs are expanding into historically open ecosystems across the globe, threatening ecological function and ecosystem services. Across much of the eastern U.S., increasing woody cover has been associated with ecological degradation of forest and savanna ecosystems, and more recently, heightened large wildfire risk. Understanding patterns in woody cover increases will be paramount for assessing potential ecological outcomes and developing region-specific management approaches. Using remotely sensed land-use and vegetation cover data, we quantified changes in woody cover between 2001 and 2021 across land-use types in the eastern U.S. to determine the relative contribution of forest infilling and land-use conversion to woody cover increases. Woody cover increased across a range of land-use types in the eastern U.S. including wetlands, pasturelands, and forests. Infilling of deciduous forests and encroachment in open land-use types such as pasturelands dominated the northeast. In contrast, high levels of land-use conversion from non-woody land-use types to forests along with increasing woody cover in wetlands dominated the southeast. Our findings suggest that increasing woody cover in the eastern U.S. likely reflects both intentional increases of woody cover by silviculture as well as unintentional increases tied to wetland woody encroachment and forest densification. Our findings highlight areas to target ecological impact assessments and management efforts. Further, we demonstrate a growing need to assess the potential impacts of expanding pine plantation area on forest ecology and changing wildfire risk.</p></details></div><div class="entry"><div class="csl-bib-body" style="line-height: 2; padding-left: 1em; text-indent:-1em;">
   <div class="csl-entry"><strong>Weidig, N. C.</strong>, Wonkka, C. L., Ivey, M. A., &amp; Donovan, V. M. (2024). Changing large wildfire dynamics in the wildland&#x2013;urban interface of the eastern United States. <i>International Journal of Wildland Fire</i>, <i>33</i>(12). <a href="https://doi.org/" target="_blank">https://doi.org/</a><a href="https://doi.org/10.1071/WF24110" target="_blank">10.1071/WF24110</a></div>
-</div><details><summary>Abstract</summary><p>The recent increase in large wildfires in the eastern United States makes it crucial to examine the subsequent risk to human life and property. In the eastern US, the wildland–urban interface (WUI), where wildfire risk is greatest, has expanded tremendously over the last three decades. Aims: This study aimed to understand how increasing wildfires in the eastern US are manifesting in the WUI. We quantified WUI growth and characterised large (>200 ha) wildfire regimes inside and outside the WUI at multiple spatial scales across the eastern US between 1986 and 2021. WUI wildfires in the eastern US comprised 45% of all large wildfires and 55% of the area burned, were on average 46% larger than non-WUI wildfires, and are becoming more frequent in spring. Most increases in wildfire number and area burned occurred outside of the WUI. The WUI plays an important role in large wildfire dynamics in the eastern US; however, increases in the number of large wildfires have occurred primarily outside the WUI. Our findings highlight important interactions between human development and large wildfire occurrence in the eastern US and should be used to direct future region-specific assessments of changing wildfire risk.</p></details></div><div class="entry"><div class="csl-bib-body" style="line-height: 2; padding-left: 1em; text-indent:-1em;">
+</div><details><summary>Abstract</summary><p>The recent increase in large wildfires in the eastern United States makes it crucial to examine the subsequent risk to human life and property. In the eastern US, the wildland–urban interface (WUI), where wildfire risk is greatest, has expanded tremendously over the last three decades. Aims: This study aimed to understand how increasing wildfires in the eastern US are manifesting in the WUI. We quantified WUI growth and characterised large (>200 ha) wildfire regimes inside and outside the WUI at multiple spatial scales across the eastern US between 1986 and 2021. WUI wildfires in the eastern US comprised 45% of all large wildfires and 55% of the area burned, were on average 46% larger than non-WUI wildfires, and are becoming more frequent in spring. Most increases in wildfire number and area burned occurred outside of the WUI. The WUI plays an important role in large wildfire dynamics in the eastern US; however, increases in the number of large wildfires have occurred primarily outside the WUI. Our findings highlight important interactions between human development and large wildfire occurrence in the eastern US and should be used to direct future region-specific assessments of changing wildfire risk.</p></details></div><div class="entry"><div class="csl-bib-body" style="line-height: 2; padding-left: 1em; text-indent:-1em;">
   <div class="csl-entry">Ivey, M., Wonkka, C. L., <strong>Weidig, N. C.</strong>, &amp; Donovan, V. M. (2024). Woody cover fuels large wildfire risk in the eastern US. <i>Geophysical Research Letters</i>, <i>51</i>(e2024GL110586). <a href="https://doi.org/" target="_blank">https://doi.org/</a><a href="https://doi.org/10.1029/2024GL110586" target="_blank">10.1029/2024GL110586</a></div>
 </div><details><summary>Abstract</summary><p>Large wildfires are increasing in the eastern United States; however, what factors are heightening large wildfire risk remains unclear. Increases in fuel loads from woody encroachment and canopy infilling have been associated with increasing wildfire risk in other US regions. Understanding if and where woody cover increases wildfire risk can help direct proactive fuels management. We characterize multi-scale changes in woody cover through time and assess the relationship between woody cover and large wildfire (>200 ha) occurrence in the eastern US between 1990 and 2020. We found a 37% increase in woody cover across the eastern US, with increases occurring in every ecoregion. The odds of large wildfire increased as woody cover increased in most central and southern ecoregions, where large wildfires were typically more likely in areas with high woody cover (70%–100% cover). Our findings suggest fuels management will be an important tool for reducing large wildfire risk.</p></details></div><div class="entry"><div class="csl-bib-body" style="line-height: 2; padding-left: 1em; text-indent:-1em;">
   <div class="csl-entry"><strong>Weidig, N. C.</strong>, Miller, A. L., &amp; Parker, A. T. (2022). The Goldilocks principle: Finding the balance between water volume and nutrients for ovipositing Culex mosquitoes (Diptera: Culicidae). <i>PLOS ONE</i>, <i>17</i>(11), e0277237. <a href="https://doi.org/" target="_blank">https://doi.org/</a><a href="https://doi.org/10.1371/journal.pone.0277237" target="_blank">10.1371/journal.pone.0277237</a></div>
@@ -32,7 +600,7 @@
   <div class="csl-entry">Alexander, H. D., Donovan, V., Lamounier Moura, A., Lazzaro, L. G., <strong>Weidig, N. C.</strong>, &amp; Ivey, M. (2025). Shifting forest structure and composition following decades of fire exclusion in the eastern U.S.: Implications for prescribed fire restoration and wildfires. <i>Proceedings of the 4th Fire Ecology and Management Symposium (FES-412)</i>, <i>4</i>.</div>
 </div></div><div class="entry"><div class="csl-bib-body" style="line-height: 2; padding-left: 1em; text-indent:-1em;">
   <div class="csl-entry">Donovan, V. M., <strong>Weidig, N. C.</strong>, Ivey, M. A., Crandall, R. M., Fill, J. M., &amp; Wonkka, C. L. (2025, October). Changing large wildfire regime dynamics in the eastern United States. <i>Oak Woodlands &amp; Forests Fire Consortium</i>.</div>
-</div><details><summary>Abstract</summary><p>Dr. Donovan will provide a summary of her lab’s ongoing research investigations into changes in large (>200 ha) wildfire activity across multiple scales in the eastern U.S. and the interacting factors affecting wildfire risk. Specifically, we found shifting wildfire regime characteristics across south and central ecoregions in the east that include increasing wildfire number, size, and annual occurrence, along with changes in wildfire seasonality.  Just under half of all wildfires burned within the wildland-urban interface (WUI), where the greatest risk to human life and property from wildfires exists. Increases in large wildfire are largely occurring outside the WUI, though these wildfires tend to be closer to the WUI than expected at random. We find factors such as suppression potential, weather conditions, and patterns in woody cover influence the WUI-wildfire dynamic, but relationships vary regionally. We also identified long-term increases in woody cover across eastern ecoregions, linking higher levels of woody cover to heightened wildfire risk in multiple locations. Further investigations have found that woody cover interactions with short-term drought strongly predict large wildfire occurrence across numerous eastern ecoregions. While further research into the drivers of changing large wildfire patterns is needed, we suggest the strategic application of fuels management along with the development of fire-resistant homes and buildings to enhance community resilience to wildfire in the east.</p></details></div><div class="entry"><div class="csl-bib-body" style="line-height: 2; padding-left: 1em; text-indent:-1em;">
+</div><details><summary>Abstract</summary><p>Dr. Donovan will provide a summary of her lab's ongoing research investigations into changes in large (>200 ha) wildfire activity across multiple scales in the eastern U.S. and the interacting factors affecting wildfire risk. Specifically, we found shifting wildfire regime characteristics across south and central ecoregions in the east that include increasing wildfire number, size, and annual occurrence, along with changes in wildfire seasonality.  Just under half of all wildfires burned within the wildland-urban interface (WUI), where the greatest risk to human life and property from wildfires exists. Increases in large wildfire are largely occurring outside the WUI, though these wildfires tend to be closer to the WUI than expected at random. We find factors such as suppression potential, weather conditions, and patterns in woody cover influence the WUI-wildfire dynamic, but relationships vary regionally. We also identified long-term increases in woody cover across eastern ecoregions, linking higher levels of woody cover to heightened wildfire risk in multiple locations. Further investigations have found that woody cover interactions with short-term drought strongly predict large wildfire occurrence across numerous eastern ecoregions. While further research into the drivers of changing large wildfire patterns is needed, we suggest the strategic application of fuels management along with the development of fire-resistant homes and buildings to enhance community resilience to wildfire in the east.</p></details></div><div class="entry"><div class="csl-bib-body" style="line-height: 2; padding-left: 1em; text-indent:-1em;">
   <div class="csl-entry">Donovan, V. M., <strong>Weidig, N. C.</strong>, Ivey, M. A., Crandall, R. M., Fill, J. M., &amp; Wonkka, C. L. (2025, April). Unravelling changing wildfire regime dynamics in the eastern United States. <i>International Association for Landscape Ecology - North America Annual Conference</i>.</div>
 </div><details><summary>Abstract</summary><p>Wildfire risk is changing across the globe. We provide a summary of ongoing investigations into changes in large (>200 ha) wildfire activity across multiple scales in the eastern U.S. and the interacting factors affecting wildfire risk. We found shifting wildfire regime characteristics across south and central ecoregions in the east that include increasing wildfire number, size, and annual occurrence, along with changes in wildfire seasonality. Human ignitions started most wildfires in the eastern U.S., though in the Southern Coastal Plain, the majority of area burned was caused by naturally started wildfires. Just under half of all wildfires burned within the Wildland-Urban Interface (WUI), where the greatest risk to human life and property from wildfires exists. However, increasing trends in large wildfire are largely occurring outside the WUI. We find factors such as suppression potential, weather conditions, and fuels influence this dynamic. We also identified long-term increases in woody cover across eastern ecoregions, linking higher levels of woody cover to heightened wildfire risk in multiple locations. Further investigations find that climate-woody cover interactions strongly predict large wildfire occurrence across numerous eastern ecoregions. While further research into the drivers of changing large wildfire patterns is needed, we suggest the strategic application of fuels management along with the development of fire-resistant homes and buildings to enhance community resilience to wildfire.</p></details></div><div class="entry"><div class="csl-bib-body" style="line-height: 2; padding-left: 1em; text-indent:-1em;">
   <div class="csl-entry"><strong>Weidig, N. C.</strong>, Wonkka, C. L., Ivey, M. A., Johnson, D. J., &amp; Donovan, V. M. (2025, August). Fire at the fringe: Drivers of large wildfires in and near the wildland-urban interface of the eastern United States. <i>Ecological Society of America</i>.</div>
@@ -56,7 +624,7 @@ We found that fewer large wildfires burned in the WUI compared to randomly selec
   <div class="csl-entry"><strong>Weidig, N. C.</strong>, Wonkka, C. L., Ivey, M. A., &amp; Donovan, V. M. (2024, April). Large Wildfire Patterns in the Wildland-Urban Interface of the Eastern U.S. <i>International Association for Landscape Ecology - North America Annual Conference</i>.</div>
 </div><details><summary>Abstract</summary><p>Wildfires are increasing in the eastern United States. The wildland-urban interface (WUI), which occurs at the intersection between human development and wildland vegetative fuels, remains the focus for predicting and mitigating wildfire risk. Wildfires in the WUI require more resources to suppress, destroy more homes, and pose a greater threat to human life. The eastern U.S. contains a disproportionately large amount of the WUI compared to other parts of the country, making it crucial to characterize differences between WUI and non-WUI wildfire regime changes. We contrast spatial and temporal characteristics of WUI versus non-WUI wildfire regimes across Level III ecoregions in the eastern U.S. using decadal WUI maps from 1990 to 2020 combined with large wildfire perimeter data and ignition source data from 1986 to 2021. We found that a substantial proportion of wildfires occurred in the WUI (45%), even though the WUI only makes up 22% of the eastern U.S. by area. The number of wildfires, mean area burned, and total area burned increased both inside and outside the WUI in most ecoregions. The primary source of wildfire ignitions in the WUI was arson and, secondarily, natural causes (lightning). The results of this study highlight the increasing risk of large wildfires in the eastern U.S. and can be used to help support informed decision-making surrounding wildfire risk management in the region.</p></details></div><div class="entry"><div class="csl-bib-body" style="line-height: 2; padding-left: 1em; text-indent:-1em;">
   <div class="csl-entry"><strong>Weidig, N. C.</strong>, Wonkka, C. L., Ivey, M. A., &amp; Donovan, V. M. (2024, November). Changing Large Wildfire Patterns in the Eastern United States Wildland-Urban Interface. <i>Northwest Florida Association of Environmental Practitioners Symposium</i>.</div>
-</div><details><summary>Abstract</summary><p>The recent increase in large wildfires in the eastern United States makes it crucial to examine the subsequent risk to human life and property. In the eastern US, the wildland–urban interface (WUI), where wildfire risk is greatest, has expanded tremendously over the last three decades. Aims: This study aimed to understand how increasing wildfires in the eastern US are manifesting in the WUI. We quantified WUI growth and characterised large (>200 ha) wildfire regimes inside and outside the WUI at multiple spatial scales across the eastern US between 1986 and 2021. WUI wildfires in the eastern US comprised 45% of all large wildfires and 55% of the area burned, were on average 46% larger than non-WUI wildfires, and are becoming more frequent in spring. Most increases in wildfire number and area burned occurred outside of the WUI. The WUI plays an important role in large wildfire dynamics in the eastern US; however, increases in the number of large wildfires have occurred primarily outside the WUI. Our findings highlight important interactions between human development and large wildfire occurrence in the eastern US and should be used to direct future region-specific assessments of changing wildfire risk.</p></details></div><div class="entry"><div class="csl-bib-body" style="line-height: 2; padding-left: 1em; text-indent:-1em;">
+</div><details><summary>Abstract</summary><p>The recent increase in large wildfires in the eastern United States makes it crucial to examine the subsequent risk to human life and property. In the eastern US, the wildland–urban interface (WUI), where wildfire risk is greatest, has expanded tremendously over the last three decades. Aims: This study aimed to understand how increasing wildfires in the eastern US are manifesting in the WUI. We quantified WUI growth and characterised large (>200 ha) wildfire regimes inside and outside the WUI at multiple spatial scales across the eastern US between 1986 and 2021. WUI wildfires in the eastern US comprised 45% of all large wildfires and 55% of the area burned, were on average 46% larger than non-WUI wildfires, and are becoming more frequent in spring. Most increases in wildfire number and area burned occurred outside of the WUI. The WUI plays an important role in large wildfire dynamics in the eastern US; however, increases in the number of large wildfires have occurred primarily outside the WUI. Our findings highlight important interactions between human development and large wildfire occurrence in the eastern US and should be used to direct future region-specific assessments of changing wildfire risk.</p></details></div><div class="entry"><div class="csl-bib-body" style="line-height: 2; padding-left: 1em; text-indent:-1em;">
   <div class="csl-entry"><strong>Weidig, N. C.</strong>, Niang, D., Williams, M., Porema, K., Palumbo, J., Weyrich, A., Smyth, S., &amp; Lynch, D. R. (2022, October). Inflammation mediated reprogramming of platelets following transcatheter aortic valve replacement. <i>International Society for Applied Cardiovascular Biology Biennial Meeting</i>.</div>
 </div></div><div class="entry"><div class="csl-bib-body" style="line-height: 2; padding-left: 1em; text-indent:-1em;">
   <div class="csl-entry"><strong>Weidig, N. C.</strong>, Miller, A. L., &amp; Parker, A. T. (2021, August). The Goldilocks principle: Finding the balance between water volume and nutrients for ovipositing Culex mosquitoes (Diptera: Culicidae). <i>Northern Kentucky University Heather Bullen Research Celebration</i>.</div>
@@ -66,7 +634,7 @@ We found that fewer large wildfires burned in the WUI compared to randomly selec
   <div class="csl-entry">Donovan, V. M., &amp; <strong>Weidig, N. C.</strong> (2025). <i>Referee report. For: Integrated Fire Management and Closer to Nature Forest Management at the Landscape Scale as a Holistic Approach to Foster Forest Resilience to Wildfires [version 3; peer review: 4 approved with reservations, 2 not approved]</i>. F1000 Research Limited. <a href="https://doi.org/" target="_blank">https://doi.org/</a><a href="https://doi.org/10.21956/OPENRESEUROPE.21420.R53295" target="_blank">10.21956/OPENRESEUROPE.21420.R53295</a></div>
 </div><details><summary>Abstract</summary><p>This Open Letter by Kalapodis and Sakkas presents a framework for enhancing the resilience of forests against the increasing wildfire issue in Europe by integrating Integrated Fire Management (IFM) and Closer-to-Nature Forest Management (CTNFM). The authors cover a wide array of topics concerning fire suppression, fuel management, wildfire preparedness, and forest resilience. While addressing the recent rise in both the frequency and intensity of wildfires in Europe is relevant, it is unclear whether this paper makes a significant contribution to this effort. A primary concern is that much of the language throughout the letter is unclear and requires numerous changes to improve the flow and readability of the manuscript. Additionally, this manuscript is rather long and winding making it difficult to follow. A key missing piece upon reading the paper is why the authors specifically choose to focus on these two approaches and why do they argue they need to be integrated? It is difficult to assess the validity for the paper since it is unclear what the justification is for the integration of the approaches. Overall, the current version requires substantial revision to clarify their arguments, reduce repetitive language, and improve of the general flow of the manuscript.</p></details></div><div class="type-heading">Media Coverage</div><div class="entry"><div class="csl-bib-body" style="line-height: 2; padding-left: 1em; text-indent:-1em;">
   <div class="csl-entry">Ivey, M. A., Wonkka, C. L., <strong>Weidig, N. C.</strong>, &amp; Donovan, V. M. (2025, August). Woody Cover Fuels Large Wildfire Risk in the Eastern U.S. <i>Oak Woodlands &amp; Forests Fire Consortium</i>. <a href="https://oakfirescience.com/research-brief/woody-cover-fuels-large-wildfire-risk-in-the-eastern-u-s/" target="_blank">https://oakfirescience.com/research-brief/woody-cover-fuels-large-wildfire-risk-in-the-eastern-u-s/</a></div>
-</div><details><summary>Abstract</summary><p>This study characterizes changes in woody vegetation cover across the eastern United States from 1990 to 2020 and evaluates its association with the occurrence of large wildfires (i.e., >200 ha (~494 acres)). Although woody encroachment and canopy infilling have been partially linked to increased wildfire risk in the western US and Great Plains, large-scale trends in eastern U.S. woody vegetation—and their potential influence on wildfire risk—remain less well understood.</p></details></div><div class="entry"><div class="csl-bib-body" style="line-height: 2; padding-left: 1em; text-indent:-1em;">
+</div><details><summary>Abstract</summary><p>This study characterizes changes in woody vegetation cover across the eastern United States from 1990 to 2020 and evaluates its association with the occurrence of large wildfires (i.e., >200 ha (~494 acres)). Although woody encroachment and canopy infilling have been partially linked to increased wildfire risk in the western US and Great Plains, large-scale trends in eastern U.S. woody vegetation—and their potential influence on wildfire risk—remain less well understood.</p></details></div><div class="entry"><div class="csl-bib-body" style="line-height: 2; padding-left: 1em; text-indent:-1em;">
   <div class="csl-entry">Fernandez, C. (2025, November). Changing Large Wildfire Dynamics in the Wildland&#x2013;Urban Interface of the Eastern United States: Research Brief. <i>Fire Lines</i>, <i>15</i>(7). <a href="https://mailchi.mp/southernfireexchange/fire-lines-volume-14-issue-9436916" target="_blank">https://mailchi.mp/southernfireexchange/fire-lines-volume-14-issue-9436916</a></div>
 </div><details><summary>Abstract</summary><p>As development continues to expand into fire-prone landscapes, the eastern United States is experiencing notable shifts in wildfire patterns. Weidig and colleagues analyzed four decades of wildfire records to examine how large wildfire dynamics have changed across eastern ecoregions, with a particular focus on the wildland-urban interface (WUI)–areas where homes and wildlands meet. The study assessed trends in wildfire size, frequency, and seasonality both within and outside the WUI, providing new insights into how changing land use and fire weather are reshaping fire regimes in this land-use type.
 
@@ -76,7 +644,14 @@ For fire managers in the southern region, this study supports the use of prescri
   <div class="csl-entry">Lester, L. (2024, December 17). Wildfire surges in East, Southeast US fueled by new trees and shrubs. <i>AGU News</i>. <a href="https://news.agu.org/press-release/shrub-growth-fuels-eastern-wildfires/." target="_blank">https://news.agu.org/press-release/shrub-growth-fuels-eastern-wildfires/.</a></div>
 </div><details><summary>Abstract</summary><p>Woody vegetation has increased by 37% over the last 30 years in the eastern United States, fueling the rise in large wildfires. Texas and the Appalachian Mountains took the biggest hits.</p></details></div>
 <!-- END PUBS -->
-</div>
+    </div>
+  </main>
+
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <footer class="footer">
+    <div class="footer-gradient"></div>
+    <p>Noah C. Weidig &middot; Updated automatically from Zotero</p>
+  </footer>
 
 </body>
 </html>
