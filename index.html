@@ -209,24 +209,25 @@
       padding: 0.45rem 1.1rem;
       border-radius: 9999px;
       transition: color 0.25s ease, background 0.25s ease;
+      white-space: nowrap;
     }
 
     .nav-link:hover {
-      color: var(--text-color);
-      background: rgba(255, 255, 255, 0.06);
+      color: var(--link-hover);
+      background: none;
     }
 
     .light-theme .nav-link:hover {
-      background: rgba(0, 0, 0, 0.04);
+      background: none;
     }
 
     .nav-link--active {
-      color: var(--text-color);
-      background: rgba(255, 255, 255, 0.08);
+      color: var(--accent-primary);
+      background: none;
     }
 
     .light-theme .nav-link--active {
-      background: rgba(0, 0, 0, 0.05);
+      background: none;
     }
 
     .nav-toggle {
@@ -266,7 +267,7 @@
         top: 100%;
         left: 0;
         width: 100%;
-        background: var(--nav-bg);
+        background: var(--bg-color);
         border-bottom: 1px solid var(--nav-border);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
@@ -294,24 +295,25 @@
         padding: 0.75rem 1rem;
         border-radius: 8px;
         transition: all 0.2s ease;
+        white-space: nowrap;
     }
 
     .mobile-nav-link:hover {
-        background: rgba(255,255,255,0.05);
-        color: var(--text-color);
+        background: none;
+        color: var(--link-hover);
     }
 
     .light-theme .mobile-nav-link:hover {
-        background: rgba(0,0,0,0.05);
+        background: none;
     }
 
     .mobile-nav-link--active {
-        color: var(--text-color);
-        background: rgba(255,255,255,0.08);
+        color: var(--accent-primary);
+        background: none;
     }
 
     .light-theme .mobile-nav-link--active {
-        background: rgba(0,0,0,0.05);
+        background: none;
     }
 
     /* Responsive Adjustments */
@@ -326,7 +328,6 @@
 
         .nav {
              padding: 1rem 1rem;
-             position: absolute;
         }
     }
 
@@ -348,7 +349,6 @@
       font-size: 2rem;
       font-weight: 700;
       letter-spacing: 0.05em;
-      text-transform: uppercase;
       margin-top: 4rem;
       margin-bottom: 1.5rem;
       padding-bottom: 0.5rem;
