@@ -27,7 +27,7 @@
       --card-bg: rgba(255, 255, 255, 0.03);
       --card-border: rgba(255, 255, 255, 0.06);
       --card-hover-bg: rgba(255, 255, 255, 0.06);
-      --nav-bg: #0b0f1a;
+      --nav-bg: #161b22;
       --nav-border: rgba(255, 255, 255, 0.08);
       --link-color: #c4b5fd;
       --link-hover: #f9a85c;
@@ -259,6 +259,71 @@
         display: none;
     }
 
+    /* Hamburger Animation */
+    .hamburger-toggle .line-top,
+    .hamburger-toggle .line-middle,
+    .hamburger-toggle .line-bottom {
+      transform-origin: center;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .hamburger-toggle.is-active .line-top {
+      transform: translateY(6px) rotate(45deg);
+    }
+
+    .hamburger-toggle.is-active .line-middle {
+      opacity: 0;
+    }
+
+    .hamburger-toggle.is-active .line-bottom {
+      transform: translateY(-6px) rotate(-45deg);
+    }
+
+    /* Search Overlay */
+    .search-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: var(--nav-bg);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      border-bottom: 1px solid var(--nav-border);
+      gap: 1rem;
+    }
+
+    .search-input {
+      flex: 1;
+      max-width: 600px;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border: 1px solid var(--nav-border);
+      border-radius: 8px;
+      background: var(--bg-color);
+      color: var(--text-color);
+      outline: none;
+    }
+
+    .search-input:focus {
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.2);
+    }
+
+    .search-close {
+      background: none;
+      border: none;
+      color: var(--text-color);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     /* Mobile Menu */
     .mobile-menu {
         position: absolute;
@@ -269,6 +334,7 @@
         border-bottom: 1px solid var(--nav-border);
         display: none;
         flex-direction: column;
+        align-items: center;
         padding: 1rem;
         gap: 0.5rem;
     }
@@ -568,6 +634,13 @@
     </div>
 
     <div class="nav-right">
+      <button class="nav-toggle" id="search-toggle" aria-label="Search publications">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </button>
+
       <button class="nav-toggle" id="theme-toggle" aria-label="Toggle theme">
         <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="5"></circle>
@@ -580,9 +653,9 @@
 
       <button class="nav-toggle hamburger-toggle" id="menu-toggle" aria-label="Toggle menu">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <line x1="3" y1="18" x2="21" y2="18"></line>
+          <line class="line-top" x1="3" y1="6" x2="21" y2="6"></line>
+          <line class="line-middle" x1="3" y1="12" x2="21" y2="12"></line>
+          <line class="line-bottom" x1="3" y1="18" x2="21" y2="18"></line>
         </svg>
       </button>
     </div>
@@ -671,6 +744,12 @@ For fire managers in the southern region, this study supports the use of prescri
     <p>Noah Weidig &middot; Updated automatically from Zotero</p>
   </footer>
 
+  <!-- Search Overlay -->
+  <div id="search-overlay" class="search-overlay">
+    <button id="search-close" class="search-close" aria-label="Close search">&times;</button>
+    <input type="text" id="search-input" class="search-input" placeholder="Search publications..." aria-label="Search publications">
+  </div>
+
   <script>
     const toggle = document.getElementById('theme-toggle');
     const body = document.body;
@@ -693,12 +772,56 @@ For fire managers in the southern region, this study supports the use of prescri
 
     menuToggle.addEventListener('click', () => {
       mobileMenu.classList.toggle('is-open');
+      menuToggle.classList.toggle('is-active');
     });
 
     mobileLinks.forEach(link => {
       link.addEventListener('click', () => {
         mobileMenu.classList.remove('is-open');
+        menuToggle.classList.remove('is-active');
       });
+    });
+
+    // Search Logic
+    const searchToggle = document.getElementById('search-toggle');
+    const searchOverlay = document.getElementById('search-overlay');
+    const searchClose = document.getElementById('search-close');
+    const searchInput = document.getElementById('search-input');
+    const pubEntries = document.querySelectorAll('.entry');
+
+    function filterPubs(query) {
+      const lowerQuery = query.toLowerCase();
+      pubEntries.forEach(entry => {
+        const text = entry.textContent.toLowerCase();
+        if (text.includes(lowerQuery)) {
+          entry.style.display = '';
+        } else {
+          entry.style.display = 'none';
+        }
+      });
+    }
+
+    searchToggle.addEventListener('click', () => {
+      searchOverlay.style.display = 'flex';
+      searchInput.focus();
+    });
+
+    function closeSearch() {
+      searchOverlay.style.display = 'none';
+      searchInput.value = '';
+      filterPubs('');
+    }
+
+    searchClose.addEventListener('click', closeSearch);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && searchOverlay.style.display === 'flex') {
+        closeSearch();
+      }
+    });
+
+    searchInput.addEventListener('input', (e) => {
+      filterPubs(e.target.value);
     });
   </script>
 </body>
