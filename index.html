@@ -27,7 +27,7 @@
       --card-bg: rgba(255, 255, 255, 0.03);
       --card-border: rgba(255, 255, 255, 0.06);
       --card-hover-bg: rgba(255, 255, 255, 0.06);
-      --nav-bg: rgba(255, 255, 255, 0.05);
+      --nav-bg: #0b0f1a;
       --nav-border: rgba(255, 255, 255, 0.08);
       --link-color: #c4b5fd;
       --link-hover: #f9a85c;
@@ -50,7 +50,7 @@
       --card-bg: rgba(255, 255, 255, 0.6);
       --card-border: rgba(0, 0, 0, 0.06);
       --card-hover-bg: rgba(255, 255, 255, 0.85);
-      --nav-bg: rgba(255, 255, 255, 0.6);
+      --nav-bg: #f8fafc;
       --nav-border: rgba(0, 0, 0, 0.08);
       --link-color: #7c3aed;
       --link-hover: #ea580c;
@@ -154,8 +154,6 @@
       padding: 1rem 1.25rem;
       background: var(--nav-bg);
       border-bottom: 1px solid var(--nav-border);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
       transition: background 0.3s ease, border-color 0.3s ease;
     }
 
@@ -269,8 +267,6 @@
         width: 100%;
         background: var(--bg-color);
         border-bottom: 1px solid var(--nav-border);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
         display: none;
         flex-direction: column;
         padding: 1rem;
@@ -317,7 +313,7 @@
     }
 
     /* Responsive Adjustments */
-    @media (max-width: 768px) {
+    @media (max-width: 1100px) {
         .nav-center {
             display: none;
         }
