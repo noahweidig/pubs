@@ -81,7 +81,7 @@ function categorize(it) {
   const t = it.data.itemType;
   if (t === "journalArticle") return "Publications";
   if (t === "presentation" || t === "conferencePaper") return "Presentations";
-  if (t === "thesis") return "Theses";
+  if (t === "thesis") return "Thesis";
   if (t === "preprint" || /referee report/i.test(it.data.title || "")) return "Peer Reviews";
   return "Media Coverage";
 }
@@ -98,7 +98,7 @@ items.forEach(it => {
   });
 });
 
-const typeOrder = ["Publications","Presentations","Theses","Peer Reviews","Media Coverage"];
+const typeOrder = ["Publications","Presentations","Thesis","Peer Reviews","Media Coverage"];
 
 let pubs = typeOrder
   .filter(type => grouped[type])
