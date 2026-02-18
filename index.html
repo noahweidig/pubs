@@ -151,7 +151,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.8rem 2rem;
+      padding: 1rem 1.25rem;
       background: var(--nav-bg);
       border-bottom: 1px solid var(--nav-border);
       backdrop-filter: blur(20px);
@@ -159,7 +159,14 @@
       transition: background 0.3s ease, border-color 0.3s ease;
     }
 
-    .nav-left, .nav-center, .nav-right {
+    .nav-left {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: var(--text-color);
+    }
+
+    .nav-center, .nav-right {
       display: flex;
       align-items: center;
     }
@@ -180,8 +187,8 @@
     }
 
     .nav-site-title {
-      font-weight: 700;
-      font-size: 1.1rem;
+      font-weight: 500;
+      font-size: 1.25rem;
       color: var(--text-color);
       letter-spacing: -0.01em;
     }
@@ -312,7 +319,7 @@
         }
 
         .nav {
-             padding: 0.8rem 1rem;
+             padding: 1rem 1rem;
         }
     }
 
@@ -552,10 +559,10 @@
 
   <!-- Navigation -->
   <nav class="nav">
-    <div class="nav-left">
+    <a href="https://noahweidig.com" class="nav-left">
       <img src="assets/icon.png" alt="Logo" class="nav-logo">
       <span class="nav-site-title">Noah Weidig</span>
-    </div>
+    </a>
 
     <div class="nav-center">
       <a class="nav-link" href="https://noahweidig.com">Home</a>
