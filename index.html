@@ -624,6 +624,21 @@
     .moon-icon { display: none; }
     .light-theme .sun-icon { display: none; }
     .light-theme .moon-icon { display: block; }
+
+    /* ── Back to Top ── */
+    .back-to-top {
+      position: fixed; bottom: 2rem; right: 2rem;
+      width: 3rem; height: 3rem; border-radius: 50%;
+      background: var(--accent-primary); color: var(--bg-color);
+      border: none; cursor: pointer; z-index: 90;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; visibility: hidden; transform: translateY(20px);
+      transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+    .back-to-top:hover { background: var(--link-hover); transform: translateY(-4px); box-shadow: 0 6px 16px rgba(0,0,0,0.2); }
+    .back-to-top:focus-visible { outline: 2px solid var(--text-color); outline-offset: 2px; }
+    .back-to-top svg { width: 1.5rem; height: 1.5rem; stroke-width: 2.5; }
   </style>
 </head>
 <body>
@@ -770,6 +785,13 @@ For fire managers in the southern region, this study supports the use of prescri
     <input type="text" id="search-input" class="search-input" placeholder="Search publications..." aria-label="Search publications">
   </div>
 
+  <!-- Back to Top -->
+  <button id="back-to-top" class="back-to-top" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+  </button>
+
   <script>
     const toggle = document.getElementById('theme-toggle');
     const body = document.body;
@@ -842,6 +864,21 @@ For fire managers in the southern region, this study supports the use of prescri
 
     searchInput.addEventListener('input', (e) => {
       filterPubs(e.target.value);
+    });
+
+    // Back to Top Logic
+    const backToTop = document.getElementById('back-to-top');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
+    });
+
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   </script>
 </body>
