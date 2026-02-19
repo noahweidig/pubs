@@ -259,11 +259,17 @@
         display: none;
     }
 
+    .hamburger-toggle svg {
+      width: 2rem;
+      height: 2rem;
+    }
+
     /* Hamburger Animation */
     .hamburger-toggle .line-top,
     .hamburger-toggle .line-middle,
     .hamburger-toggle .line-bottom {
-      transform-origin: center;
+      transform-origin: 12px 12px;
+      transform-box: view-box;
       transition: transform 0.3s ease, opacity 0.3s ease;
       stroke-linecap: round;
     }
