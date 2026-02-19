@@ -163,6 +163,7 @@
       text-decoration: none;
       color: var(--text-color);
       border-bottom: none;
+      flex-shrink: 0;
     }
 
     .nav-left:hover {
@@ -180,6 +181,7 @@
 
     .nav-right {
         gap: 0.5rem;
+        flex-shrink: 0;
     }
 
     .nav-logo {
@@ -275,7 +277,7 @@
     }
 
     .hamburger-toggle.is-active .line-top {
-      transform: translateY(6px) rotate(45deg);
+      transform: rotate(45deg) translateY(6px);
     }
 
     .hamburger-toggle.is-active .line-middle {
@@ -283,7 +285,7 @@
     }
 
     .hamburger-toggle.is-active .line-bottom {
-      transform: translateY(-6px) rotate(-45deg);
+      transform: rotate(-45deg) translateY(-6px);
     }
 
     /* Search Overlay */
@@ -389,7 +391,7 @@
     @media (min-width: 1101px) {
       .nav-left,
       .nav-right {
-        min-width: 220px;
+        flex: 1;
       }
 
       .nav-right {
