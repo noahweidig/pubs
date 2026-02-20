@@ -393,6 +393,10 @@
 
     /* Responsive Adjustments */
     @media (min-width: 1101px) {
+      .mobile-menu {
+        display: none !important;
+      }
+
       .nav-left,
       .nav-right {
         flex: 1;
@@ -804,6 +808,14 @@ For fire managers in the southern region, this study supports the use of prescri
         mobileMenu.classList.remove('is-open');
         menuToggle.classList.remove('is-active');
       });
+    });
+
+    // Close mobile menu on resize to desktop
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 1100) {
+        mobileMenu.classList.remove('is-open');
+        menuToggle.classList.remove('is-active');
+      }
     });
 
     // Search Logic
