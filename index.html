@@ -469,6 +469,13 @@
       box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
     }
 
+    .no-results {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+    }
+
     .csl-bib-body {
       line-height: 1.8 !important;
       padding-left: 0 !important;
@@ -764,6 +771,9 @@ For fire managers in the southern region, this study supports the use of prescri
   <div class="csl-entry">Lester, L. (2024, December 17). Wildfire surges in East, Southeast US fueled by new trees and shrubs. <i>AGU News</i>. <a href="https://news.agu.org/press-release/shrub-growth-fuels-eastern-wildfires/." target="_blank">https://news.agu.org/press-release/shrub-growth-fuels-eastern-wildfires/.</a></div>
 </div><details><summary>Abstract</summary><p>Woody vegetation has increased by 37% over the last 30 years in the eastern United States, fueling the rise in large wildfires. Texas and the Appalachian Mountains took the biggest hits.</p></details></div>
 <!-- END PUBS -->
+      <div id="search-no-results" class="no-results" role="status" aria-live="polite">
+        No publications found matching your search.
+      </div>
     </div>
   </main>
 
@@ -827,14 +837,41 @@ For fire managers in the southern region, this study supports the use of prescri
 
     function filterPubs(query) {
       const lowerQuery = query.toLowerCase();
+      let totalVisible = 0;
+
+      // 1. Filter entries
       pubEntries.forEach(entry => {
         const text = entry.textContent.toLowerCase();
         if (text.includes(lowerQuery)) {
           entry.style.display = '';
+          totalVisible++;
         } else {
           entry.style.display = 'none';
         }
       });
+
+      // 2. Hide empty headings
+      const headings = document.querySelectorAll('.type-heading');
+      headings.forEach(heading => {
+        let next = heading.nextElementSibling;
+        let sectionHasVisible = false;
+
+        while (next && !next.classList.contains('type-heading')) {
+          if (next.classList.contains('entry') && next.style.display !== 'none') {
+            sectionHasVisible = true;
+            break;
+          }
+          next = next.nextElementSibling;
+        }
+
+        heading.style.display = sectionHasVisible ? '' : 'none';
+      });
+
+      // 3. Show/hide "No results"
+      const noResults = document.getElementById('search-no-results');
+      if (noResults) {
+        noResults.style.display = totalVisible > 0 ? 'none' : 'block';
+      }
     }
 
     searchToggle.addEventListener('click', () => {
