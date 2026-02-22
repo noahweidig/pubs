@@ -746,7 +746,7 @@
     </div>
 
     <div class="nav-right">
-      <button class="nav-toggle" id="search-toggle" aria-label="Search publications">
+      <button class="nav-toggle" id="search-toggle" aria-label="Search publications" title="Search (Cmd+K)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -963,11 +963,23 @@ For fire managers in the southern region, this study supports the use of prescri
       searchOverlay.style.display = 'none';
       searchInput.value = '';
       filterPubs('');
+      searchToggle.focus();
     }
 
     searchClose.addEventListener('click', closeSearch);
 
     document.addEventListener('keydown', (e) => {
+      // CMD/CTRL + K
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        if (searchOverlay.style.display === 'flex') {
+          closeSearch();
+        } else {
+          searchOverlay.style.display = 'flex';
+          searchInput.focus();
+        }
+      }
+
       if (e.key === 'Escape' && searchOverlay.style.display === 'flex') {
         closeSearch();
       }
