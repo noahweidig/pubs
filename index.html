@@ -561,6 +561,37 @@
       border-color: rgba(167, 139, 250, 0.15);
     }
 
+    .entry-link-btn {
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      padding: 0.4rem 0.9rem;
+      border-radius: 9999px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      transition: all 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.75rem;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .entry-link-btn::after {
+      content: '↗';
+      font-size: 0.72rem;
+      font-weight: 500;
+    }
+
+    .entry-link-btn:hover {
+      color: var(--text-muted);
+      border-color: rgba(167, 139, 250, 0.15);
+      border-bottom-color: rgba(167, 139, 250, 0.15);
+    }
+
     .controls-wrapper {
       display: flex;
       justify-content: flex-end;
@@ -914,6 +945,31 @@ For fire managers in the southern region, this study supports the use of prescri
     const searchClose = document.getElementById('search-close');
     const searchInput = document.getElementById('search-input');
     const pubEntries = document.querySelectorAll('.entry');
+
+    function injectPublicationLinks() {
+      pubEntries.forEach(entry => {
+        if (entry.querySelector('.entry-link-btn')) return;
+
+        const firstLink = entry.querySelector('.csl-entry a[href], .csl-bib-body a[href]');
+        if (!firstLink) return;
+
+        const linkButton = document.createElement('a');
+        linkButton.className = 'entry-link-btn';
+        linkButton.href = firstLink.href;
+        linkButton.target = '_blank';
+        linkButton.rel = 'noopener noreferrer';
+        linkButton.textContent = 'Open Link';
+
+        const details = entry.querySelector('details');
+        if (details) {
+          entry.insertBefore(linkButton, details);
+        } else {
+          entry.appendChild(linkButton);
+        }
+      });
+    }
+
+    injectPublicationLinks();
 
     function filterPubs(query) {
       const lowerQuery = query.toLowerCase();
