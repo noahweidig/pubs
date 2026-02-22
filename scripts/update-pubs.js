@@ -68,13 +68,14 @@ try {
 }
 const doiRegex = /(?<!doi\.org\/)\b(10\.\d{4,9}\/[-._;()/:A-Z0-9]+)\b/gi;
 const urlRegex = /(?<!href=")(https?:\/\/[^\s<]+)/gi;
+const hrefRegex = /href="([^"]+)"/i;
 
 const extractYear = s => (s?.match(/\b(19|20)\d{2}\b/) ? +s.match(/\b(19|20)\d{2}\b/)[0] : 0);
 
 function linkify(t) {
   return t
-    .replace(doiRegex, '<a href="https://doi.org/$1" target="_blank">$1</a>')
-    .replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
+    .replace(doiRegex, '<a href="https://doi.org/$1" target="_blank" rel="noopener noreferrer">$1</a>')
+    .replace(urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
 }
 
 function categorize(it) {
@@ -91,10 +92,12 @@ items.forEach(it => {
   if (it.data.itemType === "attachment") return;
   const type = categorize(it);
   grouped[type] ??= [];
+  const linkedBib = linkify(it.bib);
   grouped[type].push({
     year: extractYear(it.data.date),
-    bib: linkify(it.bib),
-    abs: it.data.abstractNote || ""
+    bib: linkedBib,
+    abs: it.data.abstractNote || "",
+    link: linkedBib.match(hrefRegex)?.[1] || ""
   });
 });
 
@@ -106,7 +109,7 @@ let pubs = typeOrder
     `<div class="type-heading">${type}</div>` +
     grouped[type]
       .sort((a, b) => b.year - a.year)
-      .map(e => `<div class="entry">${e.bib}${e.abs ? `<details><summary>Abstract</summary><p>${e.abs}</p></details>` : ""}</div>`)
+      .map(e => `<div class="entry">${e.bib}${e.link ? `<a class="entry-link-btn" href="${e.link}" target="_blank" rel="noopener noreferrer">Open Link</a>` : ""}${e.abs ? `<details><summary>Abstract</summary><p>${e.abs}</p></details>` : ""}</div>`)
       .join("")
   )
   .join("");
