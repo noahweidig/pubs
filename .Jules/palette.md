@@ -11,3 +11,7 @@
 ## 2025-05-18 - Accessible Status Messages
 **Learning:** Adding a visible "No results" message is good, but screen reader users might miss it if it's just a div.
 **Action:** Always add `role="status"` and `aria-live="polite"` to dynamic status messages like search results or form feedback.
+
+## 2025-05-18 - Print Friendliness for Interactive Elements
+**Learning:** Interactive elements like `<details>` (collapsible sections) are terrible for printing because content is often hidden by default. Users expect "what I see is what I print" or "print everything".
+**Action:** Use `@media print` or `beforeprint` event to force-expand all collapsible sections and hide interactive controls (like toggle buttons) to ensure a clean, complete document.

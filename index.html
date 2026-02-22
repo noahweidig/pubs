@@ -517,7 +517,7 @@
       margin-top: 0.75rem;
     }
 
-    summary {
+    summary, #expand-toggle {
       cursor: pointer;
       font-size: 0.75rem;
       font-weight: 600;
@@ -536,9 +536,15 @@
       user-select: none;
     }
 
+    /* Reset button defaults for expand-toggle */
+    #expand-toggle {
+      font-family: inherit;
+      appearance: none;
+    }
+
     summary::-webkit-details-marker { display: none; }
 
-    summary::before {
+    summary::before, #expand-toggle::before {
       content: '+';
       display: inline-block;
       transition: transform 0.2s ease;
@@ -546,13 +552,19 @@
       font-weight: 400;
     }
 
-    details[open] summary::before {
+    details[open] summary::before, #expand-toggle[aria-expanded="true"]::before {
       content: '−';
     }
 
-    summary:hover {
+    summary:hover, #expand-toggle:hover {
       color: var(--text-muted);
       border-color: rgba(167, 139, 250, 0.15);
+    }
+
+    .controls-wrapper {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 1rem;
     }
 
     details p {
@@ -639,6 +651,71 @@
     .moon-icon { display: none; }
     .light-theme .sun-icon { display: none; }
     .light-theme .moon-icon { display: block; }
+
+    /* ── Print Styles ── */
+    @media print {
+      .nav, .footer, #search-overlay, .skip-link, .bg-blobs, #expand-toggle, .nav-toggle, #theme-toggle, .controls-wrapper {
+        display: none !important;
+      }
+      .main-wrapper {
+        padding-top: 0 !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+      }
+      body {
+        background: #fff !important;
+        color: #000 !important;
+      }
+      .entry {
+        break-inside: avoid;
+        border: none !important;
+        padding: 0 !important;
+        margin-bottom: 2rem !important;
+        background: transparent !important;
+        box-shadow: none !important;
+      }
+      .type-heading {
+        margin-top: 2rem !important;
+        break-after: avoid;
+        border-bottom: 2px solid #000 !important;
+        color: #000 !important;
+      }
+      a {
+        text-decoration: underline;
+        color: #000 !important;
+      }
+
+      /* Force expand details */
+      details {
+        display: block !important;
+      }
+      /* Hide the + / - icons in print */
+      summary::before, details[open] summary::before {
+        display: none !important;
+      }
+      summary {
+        list-style: none !important;
+        pointer-events: none !important;
+        padding: 0 !important;
+        border: none !important;
+        background: transparent !important;
+        color: #000 !important;
+        font-weight: 700 !important;
+        margin-top: 0.5rem !important;
+        display: block !important;
+      }
+      details p {
+        display: block !important;
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+        margin-top: 0.25rem !important;
+        padding: 0 !important;
+        border: none !important;
+        background: transparent !important;
+        color: #333 !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -710,6 +787,9 @@
   <!-- Publications -->
   <main class="main-wrapper" id="main-content">
     <div id="pubs">
+      <div class="controls-wrapper">
+        <button id="expand-toggle" aria-expanded="false" aria-label="Expand all abstracts">Expand All</button>
+      </div>
   <!-- START PUBS -->
 <div class="type-heading">Publications</div><div class="entry"><div class="csl-bib-body" style="line-height: 2; padding-left: 1em; text-indent:-1em;">
   <div class="csl-entry">Ivey, M. A., <strong>Weidig, N. C.</strong>, Ivory, A. A., &amp; Donovan, V. M. (2026). Regional differences in infilling and land-use conversion characterize woody cover increases across the Eastern United States. <i>Forest Ecology and Management</i>, <i>603</i>, 123446. <a href="https://doi.org/10.1016/j.foreco.2025.123446" target="_blank">https://doi.org/10.1016/j.foreco.2025.123446</a></div>
@@ -896,6 +976,39 @@ For fire managers in the southern region, this study supports the use of prescri
     searchInput.addEventListener('input', (e) => {
       filterPubs(e.target.value);
     });
+
+    // Expand All Logic
+    const expandToggle = document.getElementById('expand-toggle');
+    // Get fresh list of details elements
+    const getDetails = () => document.querySelectorAll('details');
+
+    if (expandToggle) {
+      expandToggle.addEventListener('click', () => {
+        const isExpanded = expandToggle.getAttribute('aria-expanded') === 'true';
+        const newState = !isExpanded;
+
+        getDetails().forEach(detail => {
+          if (newState) {
+            detail.setAttribute('open', '');
+          } else {
+            detail.removeAttribute('open');
+          }
+        });
+
+        expandToggle.setAttribute('aria-expanded', newState);
+        expandToggle.textContent = newState ? 'Collapse All' : 'Expand All';
+        expandToggle.setAttribute('aria-label', newState ? 'Collapse all abstracts' : 'Expand all abstracts');
+      });
+
+      // Automatically expand all abstracts when printing
+      window.addEventListener('beforeprint', () => {
+        getDetails().forEach(detail => detail.setAttribute('open', ''));
+        // Sync button state
+        expandToggle.setAttribute('aria-expanded', 'true');
+        expandToggle.textContent = 'Collapse All';
+        expandToggle.setAttribute('aria-label', 'Collapse all abstracts');
+      });
+    }
   </script>
 </body>
 </html>
