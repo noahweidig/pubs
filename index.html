@@ -604,6 +604,20 @@
       border-bottom-color: rgba(167, 139, 250, 0.15);
     }
 
+    /* ── Copy Button ── */
+    .copy-btn {
+      cursor: pointer; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-faint); padding: 0.4rem 0.9rem;
+      border-radius: 9999px; background: var(--card-bg); border: 1px solid var(--card-border);
+      transition: all 0.25s ease; display: inline-flex; align-items: center; gap: 0.4rem;
+      margin-top: 0.75rem; vertical-align: middle; border-bottom: 1px solid var(--card-border);
+      font-family: inherit;
+    }
+    .copy-btn:hover { color: var(--text-muted); border-color: rgba(167, 139, 250, 0.15); background: rgba(167, 139, 250, 0.05); }
+    .copy-btn svg { width: 14px; height: 14px; opacity: 0.7; stroke-width: 2px; }
+    .entry-link-btn + .copy-btn { margin-left: 0.5rem; }
+    .copy-btn.copied { color: var(--accent-secondary); border-color: var(--accent-secondary); background: rgba(52, 211, 153, 0.1); }
+
     .controls-wrapper {
       display: flex;
       justify-content: flex-end;
@@ -982,6 +996,49 @@ For fire managers in the southern region, this study supports the use of prescri
     }
 
     injectPublicationLinks();
+
+    function injectCopyButtons() {
+      pubEntries.forEach(entry => {
+        if (entry.querySelector('.copy-btn')) return;
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'copy-btn'; copyBtn.ariaLabel = 'Copy citation to clipboard';
+        const originalContent = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy`;
+        copyBtn.innerHTML = originalContent;
+
+        copyBtn.addEventListener('click', async () => {
+          let text = '';
+          const bibBody = entry.querySelector('.csl-bib-body');
+          if (bibBody) text = bibBody.innerText;
+          else {
+            const clone = entry.cloneNode(true);
+            clone.querySelectorAll('button, a.entry-link-btn, details').forEach(el => el.remove());
+            text = clone.innerText;
+          }
+          text = text.trim().replace(/\s+/g, ' ');
+
+          try {
+            await navigator.clipboard.writeText(text);
+            copyBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!`;
+            copyBtn.classList.add('copied');
+            if (copyBtn.dataset.timeoutId) clearTimeout(Number(copyBtn.dataset.timeoutId));
+
+            const timeoutId = setTimeout(() => {
+              copyBtn.innerHTML = originalContent;
+              copyBtn.classList.remove('copied');
+              delete copyBtn.dataset.timeoutId;
+            }, 2000);
+            copyBtn.dataset.timeoutId = String(timeoutId);
+          } catch (err) { console.error('Failed to copy', err); }
+        });
+
+        const details = entry.querySelector('details'), linkBtn = entry.querySelector('.entry-link-btn');
+        if (linkBtn) linkBtn.parentNode.insertBefore(copyBtn, linkBtn.nextSibling);
+        else if (details) entry.insertBefore(copyBtn, details);
+        else entry.appendChild(copyBtn);
+      });
+    }
+
+    injectCopyButtons();
 
     function filterPubs(query) {
       const lowerQuery = query.toLowerCase();
