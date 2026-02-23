@@ -773,6 +773,64 @@
         color: #333 !important;
       }
     }
+
+    /* ── Back to Top Button ── */
+    #back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 90;
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    #back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    #back-to-top:hover {
+      background: var(--card-hover-bg);
+      color: var(--accent-primary);
+      border-color: var(--accent-primary);
+      transform: translateY(-2px);
+    }
+
+    #back-to-top svg {
+      width: 1.5rem;
+      height: 1.5rem;
+      stroke-width: 2.5;
+    }
+
+    /* Adjust for mobile to avoid covering content or being too close to edge */
+    @media (max-width: 768px) {
+      #back-to-top {
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 2.5rem;
+        height: 2.5rem;
+      }
+      #back-to-top svg {
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -924,6 +982,14 @@ For fire managers in the southern region, this study supports the use of prescri
     <button id="search-close" class="search-close" aria-label="Close search">&times;</button>
     <input type="text" id="search-input" class="search-input" placeholder="Search publications..." aria-label="Search publications">
   </div>
+
+  <!-- Back to Top Button -->
+  <button id="back-to-top" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="19" x2="12" y2="5"></line>
+      <polyline points="5 12 12 5 19 12"></polyline>
+    </svg>
+  </button>
 
   <script>
     const toggle = document.getElementById('theme-toggle');
@@ -1144,6 +1210,26 @@ For fire managers in the southern region, this study supports the use of prescri
         expandToggle.setAttribute('aria-expanded', 'true');
         expandToggle.textContent = 'Collapse All';
         expandToggle.setAttribute('aria-label', 'Collapse all abstracts');
+      });
+    }
+
+    // Back to Top Logic
+    const backToTopBtn = document.getElementById('back-to-top');
+
+    if (backToTopBtn) {
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+          backToTopBtn.classList.add('visible');
+        } else {
+          backToTopBtn.classList.remove('visible');
+        }
+      });
+
+      backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
       });
     }
   </script>
