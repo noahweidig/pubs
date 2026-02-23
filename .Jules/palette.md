@@ -15,3 +15,7 @@
 ## 2025-05-18 - Print Friendliness for Interactive Elements
 **Learning:** Interactive elements like `<details>` (collapsible sections) are terrible for printing because content is often hidden by default. Users expect "what I see is what I print" or "print everything".
 **Action:** Use `@media print` or `beforeprint` event to force-expand all collapsible sections and hide interactive controls (like toggle buttons) to ensure a clean, complete document.
+
+## 2025-05-18 - Search Overlay Focus Management
+**Learning:** For custom JavaScript overlays/modals in this static site (which lacks a framework router), explicitly returning focus to the trigger element on close is essential. Without it, focus resets to the body, disorienting keyboard users.
+**Action:** Always pair `overlay.style.display = 'none'` with `triggerElement.focus()` in close handlers.
