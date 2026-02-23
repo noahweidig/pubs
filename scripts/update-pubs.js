@@ -87,6 +87,16 @@ function categorize(it) {
   return "Media Coverage";
 }
 
+function escapeHtml(unsafe) {
+  if (!unsafe) return "";
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 const grouped = {};
 items.forEach(it => {
   if (it.data.itemType === "attachment") return;
@@ -96,7 +106,7 @@ items.forEach(it => {
   grouped[type].push({
     year: extractYear(it.data.date),
     bib: linkedBib,
-    abs: it.data.abstractNote || "",
+    abs: escapeHtml(it.data.abstractNote),
     link: linkedBib.match(hrefRegex)?.[1] || ""
   });
 });
