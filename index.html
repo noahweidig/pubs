@@ -1232,13 +1232,27 @@ For fire managers in the southern region, this study supports the use of prescri
     const backToTopBtn = document.getElementById('back-to-top');
 
     if (backToTopBtn) {
-      window.addEventListener('scroll', () => {
-        if (window.scrollY > 300) {
+      const sentinel = document.createElement('div');
+      sentinel.setAttribute('aria-hidden', 'true');
+      sentinel.style.position = 'absolute';
+      sentinel.style.top = '0';
+      sentinel.style.left = '0';
+      sentinel.style.height = '300px';
+      sentinel.style.width = '1px';
+      sentinel.style.pointerEvents = 'none';
+      sentinel.style.visibility = 'hidden';
+      document.body.prepend(sentinel);
+
+      const observer = new IntersectionObserver((entries) => {
+        // If the sentinel is NOT intersecting, we've scrolled past the 300px threshold
+        if (!entries[0].isIntersecting) {
           backToTopBtn.classList.add('visible');
         } else {
           backToTopBtn.classList.remove('visible');
         }
       });
+
+      observer.observe(sentinel);
 
       backToTopBtn.addEventListener('click', () => {
         window.scrollTo({
