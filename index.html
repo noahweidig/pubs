@@ -860,7 +860,7 @@
       <a class="nav-link" href="https://noahweidig.com/#skills">Skills</a>
       <a class="nav-link" href="https://noahweidig.com/#experience">Experience</a>
       <a class="nav-link" href="https://noahweidig.substack.com/" target="_blank">Blog</a>
-      <a class="nav-link nav-link--active" href="#">Publications</a>
+      <a class="nav-link nav-link--active" href="#" aria-current="page">Publications</a>
       <a class="nav-link" href="https://noahweidig.com/#contact">Contact</a>
       <a class="nav-link" href="https://noahweidig.com/hire">Hire Me</a>
     </div>
@@ -883,7 +883,7 @@
         </svg>
       </button>
 
-      <button class="nav-toggle hamburger-toggle" id="menu-toggle" aria-label="Toggle menu">
+      <button class="nav-toggle hamburger-toggle" id="menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line class="line-top" x1="3" y1="6" x2="21" y2="6"></line>
           <line class="line-middle" x1="3" y1="12" x2="21" y2="12"></line>
@@ -898,7 +898,7 @@
       <a class="mobile-nav-link" href="https://noahweidig.com/#skills">Skills</a>
       <a class="mobile-nav-link" href="https://noahweidig.com/#experience">Experience</a>
       <a class="mobile-nav-link" href="https://noahweidig.substack.com/" target="_blank">Blog</a>
-      <a class="mobile-nav-link mobile-nav-link--active" href="#">Publications</a>
+      <a class="mobile-nav-link mobile-nav-link--active" href="#" aria-current="page">Publications</a>
       <a class="mobile-nav-link" href="https://noahweidig.com/#contact">Contact</a>
       <a class="mobile-nav-link" href="https://noahweidig.com/#hire">Hire Me</a>
     </div>
@@ -1016,23 +1016,33 @@ For fire managers in the southern region, this study supports the use of prescri
     const mobileMenu = document.getElementById('mobile-menu');
     const mobileLinks = document.querySelectorAll('.mobile-nav-link');
 
+    function setMenuState(isOpen) {
+      if (isOpen) {
+        mobileMenu.classList.add('is-open');
+        menuToggle.classList.add('is-active');
+        menuToggle.setAttribute('aria-expanded', 'true');
+      } else {
+        mobileMenu.classList.remove('is-open');
+        menuToggle.classList.remove('is-active');
+        menuToggle.setAttribute('aria-expanded', 'false');
+      }
+    }
+
     menuToggle.addEventListener('click', () => {
-      mobileMenu.classList.toggle('is-open');
-      menuToggle.classList.toggle('is-active');
+      const isOpen = mobileMenu.classList.contains('is-open');
+      setMenuState(!isOpen);
     });
 
     mobileLinks.forEach(link => {
       link.addEventListener('click', () => {
-        mobileMenu.classList.remove('is-open');
-        menuToggle.classList.remove('is-active');
+        setMenuState(false);
       });
     });
 
     // Close mobile menu on resize to desktop
     window.addEventListener('resize', () => {
       if (window.innerWidth > 1100) {
-        mobileMenu.classList.remove('is-open');
-        menuToggle.classList.remove('is-active');
+        setMenuState(false);
       }
     });
 
