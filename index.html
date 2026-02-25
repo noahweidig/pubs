@@ -1194,8 +1194,19 @@ For fire managers in the southern region, this study supports the use of prescri
 
     });
 
+    // Performance optimization: Debounce search to reduce DOM operations
+    function debounce(func, wait) {
+      let timeout;
+      return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+      };
+    }
+
+    const debouncedFilterPubs = debounce(filterPubs, 300);
+
     searchInput.addEventListener('input', (e) => {
-      filterPubs(e.target.value);
+      debouncedFilterPubs(e.target.value);
     });
 
     // Expand All Logic
