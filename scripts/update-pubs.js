@@ -1,5 +1,6 @@
 import fs from "fs";
 import fetch from "node-fetch";
+import { sanitizeHtml } from "./sanitize.js";
 
 const indexPath = "./index.html"; 
 const userID = 11988712;
@@ -103,7 +104,9 @@ items.forEach(it => {
   if (it.data.itemType === "attachment") return;
   const type = categorize(it);
   grouped[type] ??= [];
-  const linkedBib = linkify(it.bib);
+  // SENTINEL: Sanitize HTML from Zotero to prevent XSS
+  const safeBib = sanitizeHtml(it.bib);
+  const linkedBib = linkify(safeBib);
   grouped[type].push({
     year: extractYear(it.data.date),
     bib: linkedBib,

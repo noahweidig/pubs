@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "node-fetch": "3"
+    "node-fetch": "3",
+    "sanitize-html": "^2.17.1"
   }
 }
