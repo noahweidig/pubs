@@ -873,7 +873,7 @@
         </svg>
       </button>
 
-      <button class="nav-toggle" id="theme-toggle" aria-label="Toggle theme">
+      <button class="nav-toggle" id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
         <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="5"></circle>
           <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
@@ -883,7 +883,7 @@
         </svg>
       </button>
 
-      <button class="nav-toggle hamburger-toggle" id="menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+      <button class="nav-toggle hamburger-toggle" id="menu-toggle" aria-label="Toggle menu" title="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line class="line-top" x1="3" y1="6" x2="21" y2="6"></line>
           <line class="line-middle" x1="3" y1="12" x2="21" y2="12"></line>
@@ -903,6 +903,12 @@
       <a class="mobile-nav-link" href="https://noahweidig.com/#hire">Hire Me</a>
     </div>
   </nav>
+
+  <!-- Search Overlay -->
+  <div id="search-overlay" class="search-overlay">
+    <button id="search-close" class="search-close" aria-label="Close search">&times;</button>
+    <input type="text" id="search-input" class="search-input" placeholder="Search publications..." aria-label="Search publications">
+  </div>
 
   <!-- Publications -->
   <main class="main-wrapper" id="main-content">
@@ -982,14 +988,8 @@ For fire managers in the southern region, this study supports the use of prescri
     <p>Noah Weidig &middot; Updated automatically from Zotero</p>
   </footer>
 
-  <!-- Search Overlay -->
-  <div id="search-overlay" class="search-overlay">
-    <button id="search-close" class="search-close" aria-label="Close search">&times;</button>
-    <input type="text" id="search-input" class="search-input" placeholder="Search publications..." aria-label="Search publications">
-  </div>
-
   <!-- Back to Top Button -->
-  <button id="back-to-top" aria-label="Back to top">
+  <button id="back-to-top" aria-label="Back to top" title="Back to top">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <line x1="12" y1="19" x2="12" y2="5"></line>
       <polyline points="5 12 12 5 19 12"></polyline>
@@ -1082,7 +1082,9 @@ For fire managers in the southern region, this study supports the use of prescri
       pubEntries.forEach(entry => {
         if (entry.querySelector('.copy-btn')) return;
         const copyBtn = document.createElement('button');
-        copyBtn.className = 'copy-btn'; copyBtn.ariaLabel = 'Copy citation to clipboard';
+        copyBtn.className = 'copy-btn';
+        copyBtn.ariaLabel = 'Copy citation to clipboard';
+        copyBtn.title = 'Copy citation';
         const originalContent = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy`;
         copyBtn.innerHTML = originalContent;
 
@@ -1189,6 +1191,7 @@ For fire managers in the southern region, this study supports the use of prescri
       if (e.key === 'Escape' && searchOverlay.style.display === 'flex') {
         closeSearch();
       }
+
     });
 
     searchInput.addEventListener('input', (e) => {
