@@ -67,7 +67,8 @@ try {
   throw new Error(`❌ Unexpected Zotero API response: ${payload}`);
 }
 const doiRegex = /(?<!doi\.org\/)\b(10\.\d{4,9}\/[-._;()/:A-Z0-9]+)\b/gi;
-const urlRegex = /(?<!href=")(https?:\/\/[^\s<]+)/gi;
+// SENTINEL: Exclude quotes to prevent XSS in generated HTML attributes
+const urlRegex = /(?<!href=")(https?:\/\/[^\s<"']+)/gi;
 const hrefRegex = /href="([^"]+)"/i;
 
 const extractYear = s => (s?.match(/\b(19|20)\d{2}\b/) ? +s.match(/\b(19|20)\d{2}\b/)[0] : 0);
