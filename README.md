@@ -1,156 +1,84 @@
 <div align="center">
 
-# 📚 Zotero → Static Publications Page
+<img src="verification_hero.png" alt="Noah Weidig — Publications" width="100%" />
 
-**Automatically generate a beautiful, static publications page from your Zotero library.**
+<br><br>
 
-[![Update Zotero Publications](https://github.com/noahweidig/Zotero/actions/workflows/update.yml/badge.svg)](https://github.com/noahweidig/Zotero/actions/workflows/update.yml)
-[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-live-00c853?logo=github)](https://noahweidig.github.io/Zotero)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+# Noah Weidig · Publications
 
-<br>
+**Wildfire ecology, landscape dynamics, and the wildland-urban interface.**
 
-*Zero client-side JavaScript · Zero API calls on page load · Embeddable anywhere*
-
----
+[![Live Site](https://img.shields.io/badge/noahweidig.github.io-Publications-a78bfa?style=for-the-badge&logo=github)](https://noahweidig.github.io/pubs)
 
 </div>
 
-## 🔭 Overview
+<br>
 
-This repository pulls publications from a Zotero **My Publications** library and builds a static HTML page on a schedule. The result is committed to `index.html` and served via **GitHub Pages** — ready to embed in Google Sites, WordPress, or any personal website.
-
-> **Why static?** Visitors never hit the Zotero API. The page loads instantly and works offline.
+This repository powers the **Publications** section of my personal site. A scheduled GitHub Action pulls citation data from my [Zotero](https://www.zotero.org/) library, renders it into a static page, and deploys it to GitHub Pages — no client-side API calls, no JavaScript frameworks, just fast, clean HTML.
 
 <br>
 
-## ⚙️ How It Works
+## How It Works
 
-```mermaid
-flowchart LR
-    A["⏰ Cron / Manual Trigger"] --> B["🔄 GitHub Action"]
-    B --> C["📡 Zotero Web API"]
-    C --> D["🛠️ update-pubs.js"]
-    D --> E["📄 index.html"]
-    E --> F["🌐 GitHub Pages"]
-    style A fill:#f9f,stroke:#333
-    style F fill:#0d0,stroke:#333,color:#fff
+```
+Zotero Library ──▸ GitHub Action (every 14 days) ──▸ index.html ──▸ GitHub Pages
 ```
 
-| Step | What happens |
-|-----:|:-------------|
-| **1** | A GitHub Action runs every **14 days** (or on-demand via manual trigger). |
-| **2** | The action calls the [Zotero Web API](https://www.zotero.org/support/dev/web_api/v3/start) to fetch publication data (`/users/<userID>/publications`). |
-| **3** | `scripts/update-pubs.js` formats the data and injects it between `<!-- START PUBS -->` / `<!-- END PUBS -->` markers in `index.html`. |
-| **4** | The updated file is committed and pushed automatically. |
-| **5** | GitHub Pages serves the fresh static site. |
+1. A **cron-triggered workflow** fetches my publications from the Zotero Web API.
+2. `scripts/update-pubs.js` sanitizes the data and injects formatted entries into `index.html`.
+3. The updated file is committed automatically and served via **GitHub Pages**.
+
+Visitors never hit an external API. The page loads instantly and works offline.
 
 <br>
 
-## 📁 Repository Structure
+## Stack
+
+| Layer | Details |
+|------:|:--------|
+| **Data** | [Zotero Web API v3](https://www.zotero.org/support/dev/web_api/v3/start) — My Publications collection |
+| **Build** | Node.js script with `node-fetch` + `sanitize-html` |
+| **CI/CD** | GitHub Actions on a 14-day cron schedule |
+| **Hosting** | GitHub Pages — zero cost, zero maintenance |
+| **Design** | Dark & light themes, Inter typeface, CSS-only interactions |
+
+<br>
+
+## Features
+
+- **Dark / Light mode** with smooth toggle
+- **Expandable abstracts** for every entry
+- **One-click citation copy** and direct DOI links
+- **Search & filter** with real-time results
+- **Six swappable CSS themes** — academic, modern, minimal, nature, dark, and default
+- **XSS-safe** — all Zotero output is sanitized before render
+
+<br>
+
+## Repository Layout
 
 ```
 .
-├── index.html                 # Static page served by GitHub Pages
-├── package.json               # Node.js dependency manifest (node-fetch)
-├── themes/                    # Drop-in CSS themes (see § Themes below)
+├── index.html               # The publication page (auto-updated)
+├── scripts/
+│   ├── update-pubs.js       # Zotero fetch → HTML injection
+│   └── sanitize.js          # XSS sanitization layer
+├── themes/                  # Drop-in stylesheets
 │   ├── default.css
 │   ├── academic.css
 │   ├── modern.css
 │   ├── dark.css
 │   ├── minimal.css
 │   └── nature.css
-├── scripts/
-│   └── update-pubs.js         # Fetches Zotero data & injects HTML
-└── .github/
-    └── workflows/
-        └── update.yml         # Scheduled GitHub Action (cron)
+├── assets/
+│   ├── icon.png
+│   └── logo.svg
+└── .github/workflows/
+    └── update.yml           # Scheduled CI pipeline
 ```
 
 <br>
 
-## 🚀 Quick Start
+## License
 
-### 1. Fork & Configure
-
-1. **Fork** this repository.
-2. Update the `userID` in [`scripts/update-pubs.js`](scripts/update-pubs.js) with your own Zotero user ID.
-3. Enable **GitHub Pages** in your repo:
-   > **Settings → Pages → Deploy from branch → `main` → `/ (root)`**
-
-### 2. Run Manually
-
-> **Actions → `Update Zotero Publications` → Run workflow**
-
-This triggers an immediate update instead of waiting for the next scheduled run.
-
-### 3. Embed
-
-Paste the published URL into any site that supports embedding:
-
-```
-https://YOUR_USERNAME.github.io/Zotero
-```
-
-<br>
-
-## 🕒 Adjust Update Frequency
-
-Edit the cron schedule in [`.github/workflows/update.yml`](.github/workflows/update.yml):
-
-| Frequency | Cron Expression |
-|----------:|:----------------|
-| Every 14 days *(default)* | `0 0 */14 * *` |
-| Weekly (Monday) | `0 0 * * 1` |
-| Daily | `0 0 * * *` |
-
-<br>
-
-## 🎨 Themes
-
-Six ready-made themes live in the `themes/` directory. To apply one, **replace** the `<style>…</style>` block inside `index.html` with a single stylesheet link:
-
-```html
-<link rel="stylesheet" href="themes/modern.css">
-```
-
-| Theme | File | Description |
-|------:|:-----|:------------|
-| **Default** | `themes/default.css` | The original look shipped with this repo — extracted so you can extend it. |
-| **Academic** | `themes/academic.css` | Classic serif typography with ruled headings and a print-friendly feel. |
-| **Modern** | `themes/modern.css` | Card-based layout with soft shadows, rounded corners, and hover lift effects. |
-| **Dark** | `themes/dark.css` | WCAG AA dark mode with sky-blue accents — easy on the eyes at night. |
-| **Minimal** | `themes/minimal.css` | Ultra-clean design with generous whitespace and muted color. |
-| **Nature** | `themes/nature.css` | Inspired by leading scientific journals — structured, authoritative, and refined. |
-
-### Customising a Theme
-
-Every theme targets the same CSS classes generated by the build script:
-
-| Selector | Purpose |
-|---------:|:--------|
-| `body` | Page font, width, and background |
-| `#pubs strong` | Highlighted author name |
-| `.type-heading` | Section header (e.g., *Publications*, *Presentations*) |
-| `.entry` | Individual bibliography entry |
-| `details` / `summary` | Expandable abstract toggle |
-| `a` | Hyperlinks |
-| `.csl-bib-body` / `.csl-entry` | Zotero-generated citation markup |
-
-Copy any theme file, rename it, and tweak the values to match your site's brand.
-
-<br>
-
-## 📋 Requirements
-
-| Requirement | Details |
-|------------:|:--------|
-| **Zotero library** | Must be set to **public** |
-| **GitHub Pages** | Enabled on the `main` branch, root directory |
-| **`index.html`** | Must remain in the **repository root** |
-
-<br>
-
-## 📄 License
-
-Released under the [MIT License](LICENSE) — use freely.
+[MIT](LICENSE)
