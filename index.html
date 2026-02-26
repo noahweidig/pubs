@@ -1123,18 +1123,32 @@ For fire managers in the southern region, this study supports the use of prescri
 
     injectCopyButtons();
 
+    // PERFORMANCE: Cache publication text content to avoid DOM reads during search
+    // Using a simple array of objects { el: DOMElement, text: string }
+    let pubIndex = [];
+
+    function buildPubIndex() {
+      pubIndex = Array.from(pubEntries).map(entry => ({
+        el: entry,
+        text: entry.textContent.toLowerCase()
+      }));
+    }
+
+    // Build index immediately after injecting buttons
+    buildPubIndex();
+
     function filterPubs(query) {
       const lowerQuery = query.toLowerCase();
       let totalVisible = 0;
 
-      // 1. Filter entries
-      pubEntries.forEach(entry => {
-        const text = entry.textContent.toLowerCase();
-        if (text.includes(lowerQuery)) {
-          entry.style.display = '';
+      // 1. Filter entries using cached index
+      // Optimization: Iterating over JS objects is much faster than reading DOM nodes
+      pubIndex.forEach(item => {
+        if (item.text.includes(lowerQuery)) {
+          item.el.style.display = '';
           totalVisible++;
         } else {
-          entry.style.display = 'none';
+          item.el.style.display = 'none';
         }
       });
 
