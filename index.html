@@ -1158,7 +1158,33 @@ For fire managers in the southern region, this study supports the use of prescri
       // 3. Show/hide "No results"
       const noResults = document.getElementById('search-no-results');
       if (noResults) {
-        noResults.style.display = totalVisible > 0 ? 'none' : 'block';
+        if (totalVisible > 0) {
+          noResults.style.display = 'none';
+        } else {
+          noResults.style.display = 'block';
+          noResults.innerHTML = '';
+
+          const text1 = document.createTextNode('No publications found matching "');
+          const strong = document.createElement('strong');
+          strong.textContent = query;
+          const text2 = document.createTextNode('". ');
+
+          const clearBtn = document.createElement('button');
+          clearBtn.textContent = 'Clear search';
+          // Inline styles to avoid adding new CSS classes
+          clearBtn.style.cssText = 'background: none; border: none; padding: 0; color: var(--link-color); text-decoration: underline; cursor: pointer; font-size: inherit; font-family: inherit;';
+
+          clearBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            filterPubs('');
+            searchInput.focus();
+          });
+
+          noResults.appendChild(text1);
+          noResults.appendChild(strong);
+          noResults.appendChild(text2);
+          noResults.appendChild(clearBtn);
+        }
       }
     }
 
