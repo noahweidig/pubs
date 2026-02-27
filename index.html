@@ -1118,6 +1118,8 @@ For fire managers in the southern region, this study supports the use of prescri
 
     injectPublicationLinks();
 
+    const pubsContainer = document.getElementById('pubs');
+
     function injectCopyButtons() {
       pubEntries.forEach(entry => {
         if (entry.querySelector('.copy-btn')) return;
@@ -1128,32 +1130,6 @@ For fire managers in the southern region, this study supports the use of prescri
         const originalContent = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy`;
         copyBtn.innerHTML = originalContent;
 
-        copyBtn.addEventListener('click', async () => {
-          let text = '';
-          const bibBody = entry.querySelector('.csl-bib-body');
-          if (bibBody) text = bibBody.innerText;
-          else {
-            const clone = entry.cloneNode(true);
-            clone.querySelectorAll('button, a.entry-link-btn, details').forEach(el => el.remove());
-            text = clone.innerText;
-          }
-          text = text.trim().replace(/\s+/g, ' ');
-
-          try {
-            await navigator.clipboard.writeText(text);
-            copyBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!`;
-            copyBtn.classList.add('copied');
-            if (copyBtn.dataset.timeoutId) clearTimeout(Number(copyBtn.dataset.timeoutId));
-
-            const timeoutId = setTimeout(() => {
-              copyBtn.innerHTML = originalContent;
-              copyBtn.classList.remove('copied');
-              delete copyBtn.dataset.timeoutId;
-            }, 2000);
-            copyBtn.dataset.timeoutId = String(timeoutId);
-          } catch (err) { console.error('Failed to copy', err); }
-        });
-
         const details = entry.querySelector('details'), linkBtn = entry.querySelector('.entry-link-btn');
         if (linkBtn) linkBtn.parentNode.insertBefore(copyBtn, linkBtn.nextSibling);
         else if (details) entry.insertBefore(copyBtn, details);
@@ -1163,15 +1139,54 @@ For fire managers in the southern region, this study supports the use of prescri
 
     injectCopyButtons();
 
-    // PERFORMANCE: Cache publication text content to avoid DOM reads during search
+    // Event Delegation for Copy Buttons
+    if (pubsContainer) {
+      pubsContainer.addEventListener('click', async (e) => {
+        const copyBtn = e.target.closest('.copy-btn');
+        if (!copyBtn) return;
+
+        const entry = copyBtn.closest('.entry');
+        if (!entry) return;
+
+        let text = '';
+        const bibBody = entry.querySelector('.csl-bib-body');
+        if (bibBody) text = bibBody.innerText;
+        else {
+          const clone = entry.cloneNode(true);
+          clone.querySelectorAll('button, a.entry-link-btn, details').forEach(el => el.remove());
+          text = clone.innerText;
+        }
+        text = text.trim().replace(/\s+/g, ' ');
+
+        const originalContent = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy`;
+
+        try {
+          await navigator.clipboard.writeText(text);
+          copyBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!`;
+          copyBtn.classList.add('copied');
+          if (copyBtn.dataset.timeoutId) clearTimeout(Number(copyBtn.dataset.timeoutId));
+
+          const timeoutId = setTimeout(() => {
+            copyBtn.innerHTML = originalContent;
+            copyBtn.classList.remove('copied');
+            delete copyBtn.dataset.timeoutId;
+          }, 2000);
+          copyBtn.dataset.timeoutId = String(timeoutId);
+        } catch (err) { console.error('Failed to copy', err); }
+      });
+    }
+
+    // PERFORMANCE: Cache publication text content and static elements to avoid DOM reads during search
     // Using a simple array of objects { el: DOMElement, text: string }
     let pubIndex = [];
+    let headingsCache = [];
 
     function buildPubIndex() {
       pubIndex = Array.from(pubEntries).map(entry => ({
         el: entry,
         text: entry.textContent.toLowerCase()
       }));
+      headingsCache = Array.from(document.querySelectorAll('.type-heading'));
     }
 
     // Build index immediately after injecting buttons
@@ -1183,18 +1198,20 @@ For fire managers in the southern region, this study supports the use of prescri
 
       // 1. Filter entries using cached index
       // Optimization: Iterating over JS objects is much faster than reading DOM nodes
+      // Prevent Layout Thrashing: Check current display style before setting
       pubIndex.forEach(item => {
-        if (item.text.includes(lowerQuery)) {
-          item.el.style.display = '';
-          totalVisible++;
-        } else {
-          item.el.style.display = 'none';
+        const targetDisplay = item.text.includes(lowerQuery) ? '' : 'none';
+        if (item.el.style.display !== targetDisplay) {
+            item.el.style.display = targetDisplay;
+        }
+        if (targetDisplay === '') {
+            totalVisible++;
         }
       });
 
       // 2. Hide empty headings
-      const headings = document.querySelectorAll('.type-heading');
-      headings.forEach(heading => {
+      // Optimization: Cache headings so document.querySelectorAll isn't called on every search input
+      headingsCache.forEach(heading => {
         let next = heading.nextElementSibling;
         let sectionHasVisible = false;
 
@@ -1206,7 +1223,10 @@ For fire managers in the southern region, this study supports the use of prescri
           next = next.nextElementSibling;
         }
 
-        heading.style.display = sectionHasVisible ? '' : 'none';
+        const targetHeadingDisplay = sectionHasVisible ? '' : 'none';
+        if (heading.style.display !== targetHeadingDisplay) {
+            heading.style.display = targetHeadingDisplay;
+        }
       });
 
       // 3. Show/hide "No results"
