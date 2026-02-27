@@ -337,6 +337,42 @@
       justify-content: center;
     }
 
+    .search-wrapper {
+      position: relative;
+      flex: 1;
+      max-width: 600px;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-wrapper .search-input {
+      width: 100%;
+      padding-right: 2.5rem;
+    }
+
+    .search-clear {
+      position: absolute;
+      right: 0.5rem;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.25rem;
+      line-height: 1;
+    }
+
+    .search-clear:hover {
+      color: var(--accent-primary);
+    }
+
+    .search-clear[hidden] {
+      display: none;
+    }
+
     /* Mobile Menu */
     .mobile-menu {
         position: absolute;
@@ -907,7 +943,10 @@
   <!-- Search Overlay -->
   <div id="search-overlay" class="search-overlay">
     <button id="search-close" class="search-close" aria-label="Close search">&times;</button>
-    <input type="text" id="search-input" class="search-input" placeholder="Search publications..." aria-label="Search publications">
+    <div class="search-wrapper">
+      <input type="text" id="search-input" class="search-input" placeholder="Search publications..." aria-label="Search publications">
+      <button id="search-clear" class="search-clear" aria-label="Clear search" title="Clear search" hidden>&times;</button>
+    </div>
   </div>
 
   <!-- Publications -->
@@ -1051,6 +1090,7 @@ For fire managers in the southern region, this study supports the use of prescri
     const searchOverlay = document.getElementById('search-overlay');
     const searchClose = document.getElementById('search-close');
     const searchInput = document.getElementById('search-input');
+    const searchClear = document.getElementById('search-clear');
     const pubEntries = document.querySelectorAll('.entry');
 
     function injectPublicationLinks() {
@@ -1246,7 +1286,16 @@ For fire managers in the southern region, this study supports the use of prescri
     const debouncedFilterPubs = debounce(filterPubs, 300);
 
     searchInput.addEventListener('input', (e) => {
-      debouncedFilterPubs(e.target.value);
+      const val = e.target.value;
+      searchClear.hidden = val.length === 0;
+      debouncedFilterPubs(val);
+    });
+
+    searchClear.addEventListener('click', () => {
+      searchInput.value = '';
+      searchClear.hidden = true;
+      filterPubs('');
+      searchInput.focus();
     });
 
     // Expand All Logic
