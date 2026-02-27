@@ -22,6 +22,23 @@ export function sanitizeHtml(html) {
       }
     },
     allowedSchemes: [ 'http', 'https', 'mailto' ],
-    allowProtocolRelative: false
+    allowProtocolRelative: false,
+    transformTags: {
+      'a': (tagName, attribs) => {
+        if (attribs.target === '_blank') {
+          return {
+            tagName: 'a',
+            attribs: {
+              ...attribs,
+              rel: 'noopener noreferrer'
+            }
+          };
+        }
+        return {
+          tagName: 'a',
+          attribs: attribs
+        };
+      }
+    }
   });
 }
