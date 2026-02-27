@@ -104,14 +104,14 @@ items.forEach(it => {
   if (it.data.itemType === "attachment") return;
   const type = categorize(it);
   grouped[type] ??= [];
-  // SENTINEL: Sanitize HTML from Zotero to prevent XSS
-  const safeBib = sanitizeHtml(it.bib);
-  const linkedBib = linkify(safeBib);
+  // SENTINEL: Linkify BEFORE sanitization to ensure injected tags are parsed and sanitized safely
+  const linkedBib = linkify(it.bib);
+  const safeBib = sanitizeHtml(linkedBib);
   grouped[type].push({
     year: extractYear(it.data.date),
-    bib: linkedBib,
+    bib: safeBib,
     abs: escapeHtml(it.data.abstractNote),
-    link: linkedBib.match(hrefRegex)?.[1] || ""
+    link: safeBib.match(hrefRegex)?.[1] || ""
   });
 });
 
