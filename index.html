@@ -335,6 +335,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: color 0.2s ease;
+    }
+
+    .search-close:hover {
+      color: var(--accent-primary);
     }
 
     .search-wrapper {
@@ -942,7 +947,7 @@
 
   <!-- Search Overlay -->
   <div id="search-overlay" class="search-overlay">
-    <button id="search-close" class="search-close" aria-label="Close search">&times;</button>
+    <button id="search-close" class="search-close" aria-label="Close search" title="Close search">&times;</button>
     <div class="search-wrapper">
       <input type="text" id="search-input" class="search-input" placeholder="Search publications..." aria-label="Search publications">
       <button id="search-clear" class="search-clear" aria-label="Clear search" title="Clear search" hidden>&times;</button>
@@ -1268,10 +1273,14 @@ For fire managers in the southern region, this study supports the use of prescri
         }
       }
 
-      if (e.key === 'Escape' && searchOverlay.style.display === 'flex') {
-        closeSearch();
+      if (e.key === 'Escape') {
+        if (searchOverlay.style.display === 'flex') {
+          closeSearch();
+        } else if (mobileMenu && mobileMenu.classList.contains('is-open')) {
+          setMenuState(false);
+          menuToggle.focus();
+        }
       }
-
     });
 
     // Performance optimization: Debounce search to reduce DOM operations
