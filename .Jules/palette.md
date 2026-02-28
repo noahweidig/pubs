@@ -27,3 +27,7 @@
 ## 2025-05-18 - Mobile Menu Accessibility
 **Learning:** Static site mobile menus often lack state communication (aria-expanded) because they rely on simple class toggles.
 **Action:** When implementing class-based toggles (like .is-open), always pair them with a state helper function that updates aria-expanded and aria-controls simultaneously.
+
+## 2025-05-18 - Keyboard Accessible Menus
+**Learning:** Custom interactive elements like a mobile hamburger menu must handle the `Escape` key to close themselves. Additionally, when closed via keyboard, focus must be returned to the toggle button to maintain a coherent tab sequence.
+**Action:** Whenever building or modifying a custom toggle menu, verify that pressing `Escape` closes the menu and focus explicitly returns to the trigger element (`trigger.focus()`).
