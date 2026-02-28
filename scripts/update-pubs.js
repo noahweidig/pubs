@@ -70,7 +70,8 @@ try {
 const doiRegex = /(?<!doi\.org\/)\b(10\.\d{4,9}\/[-._;()/:A-Z0-9]+)\b/gi;
 // SENTINEL: Exclude quotes to prevent XSS in generated HTML attributes
 const urlRegex = /(?<!href=")(https?:\/\/[^\s<"']+)/gi;
-const hrefRegex = /href="([^"]+)"/i;
+// SENTINEL: Restrict href to http/https to prevent javascript: or data: injection XSS
+const hrefRegex = /href="(https?:\/\/[^"]+)"/i;
 
 const extractYear = s => (s?.match(/\b(19|20)\d{2}\b/) ? +s.match(/\b(19|20)\d{2}\b/)[0] : 0);
 
@@ -138,7 +139,7 @@ if (!indexFile.includes("<!-- START PUBS -->") || !indexFile.includes("<!-- END 
 
 indexFile = indexFile.replace(
   /<!-- START PUBS -->[\s\S]*<!-- END PUBS -->/,
-  `<!-- START PUBS -->\n${pubs}\n<!-- END PUBS -->`
+  () => `<!-- START PUBS -->\n${pubs}\n<!-- END PUBS -->`
 );
 
 fs.writeFileSync(indexPath, indexFile);
