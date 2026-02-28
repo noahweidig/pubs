@@ -1194,12 +1194,14 @@ For fire managers in the southern region, this study supports the use of prescri
     // PERFORMANCE: Cache publication text content to avoid DOM reads during search
     // Using a simple array of objects { el: DOMElement, text: string }
     let pubIndex = [];
+    let headingsCache = [];
 
     function buildPubIndex() {
       pubIndex = Array.from(pubEntries).map(entry => ({
         el: entry,
         text: entry.textContent.toLowerCase()
       }));
+      headingsCache = Array.from(document.querySelectorAll('.type-heading'));
     }
 
     // Build index immediately after injecting buttons
@@ -1211,18 +1213,22 @@ For fire managers in the southern region, this study supports the use of prescri
 
       // 1. Filter entries using cached index
       // Optimization: Iterating over JS objects is much faster than reading DOM nodes
+      // Optimization: Explicitly check current style.display to prevent layout thrashing
       pubIndex.forEach(item => {
-        if (item.text.includes(lowerQuery)) {
-          item.el.style.display = '';
+        const matches = item.text.includes(lowerQuery);
+        const targetDisplay = matches ? '' : 'none';
+
+        if (item.el.style.display !== targetDisplay) {
+          item.el.style.display = targetDisplay;
+        }
+
+        if (matches) {
           totalVisible++;
-        } else {
-          item.el.style.display = 'none';
         }
       });
 
       // 2. Hide empty headings
-      const headings = document.querySelectorAll('.type-heading');
-      headings.forEach(heading => {
+      headingsCache.forEach(heading => {
         let next = heading.nextElementSibling;
         let sectionHasVisible = false;
 
@@ -1234,7 +1240,10 @@ For fire managers in the southern region, this study supports the use of prescri
           next = next.nextElementSibling;
         }
 
-        heading.style.display = sectionHasVisible ? '' : 'none';
+        const targetDisplay = sectionHasVisible ? '' : 'none';
+        if (heading.style.display !== targetDisplay) {
+          heading.style.display = targetDisplay;
+        }
       });
 
       // 3. Show/hide "No results"
