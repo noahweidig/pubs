@@ -136,9 +136,10 @@ if (!indexFile.includes("<!-- START PUBS -->") || !indexFile.includes("<!-- END 
   throw new Error("❌ START PUBS / END PUBS markers not found in index.html");
 }
 
+// SENTINEL: Use replacer function to prevent injection from user-controlled data containing replacement patterns (e.g., $', $&)
 indexFile = indexFile.replace(
   /<!-- START PUBS -->[\s\S]*<!-- END PUBS -->/,
-  `<!-- START PUBS -->\n${pubs}\n<!-- END PUBS -->`
+  () => `<!-- START PUBS -->\n${pubs}\n<!-- END PUBS -->`
 );
 
 fs.writeFileSync(indexPath, indexFile);
