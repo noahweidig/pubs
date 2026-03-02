@@ -1112,50 +1112,57 @@ For fire managers in the southern region, this study supports the use of prescri
     const searchClear = document.getElementById('search-clear');
     const pubEntries = document.querySelectorAll('.entry');
 
-    function injectPublicationLinks() {
+    function setupEntryActions() {
+      // PERFORMANCE: Batch DOM queries and insertions by combining
+      // injectPublicationLinks, injectCopyButtons, and wrapEntryButtons
+      // into a single iteration over all entries to prevent layout thrashing.
       pubEntries.forEach(entry => {
-        if (entry.querySelector('.entry-link-btn')) return;
+        if (entry.querySelector('.entry-actions')) return;
 
-        const firstLink = entry.querySelector('.csl-entry a[href], .csl-bib-body a[href]');
-        if (!firstLink) return;
+        let linkBtn = entry.querySelector('.entry-link-btn');
+        if (!linkBtn) {
+          const firstLink = entry.querySelector('.csl-entry a[href], .csl-bib-body a[href]');
+          if (firstLink) {
+            linkBtn = document.createElement('a');
+            linkBtn.className = 'entry-link-btn';
+            linkBtn.href = firstLink.href;
+            linkBtn.target = '_blank';
+            linkBtn.rel = 'noopener noreferrer';
+            linkBtn.textContent = 'Open Link';
+          }
+        }
 
-        const linkButton = document.createElement('a');
-        linkButton.className = 'entry-link-btn';
-        linkButton.href = firstLink.href;
-        linkButton.target = '_blank';
-        linkButton.rel = 'noopener noreferrer';
-        linkButton.textContent = 'Open Link';
+        let copyBtn = entry.querySelector('.copy-btn');
+        if (!copyBtn) {
+          copyBtn = document.createElement('button');
+          copyBtn.className = 'copy-btn';
+          copyBtn.ariaLabel = 'Copy citation to clipboard';
+          copyBtn.title = 'Copy citation';
+          copyBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy`;
+        }
 
         const details = entry.querySelector('details');
-        if (details) {
-          entry.insertBefore(linkButton, details);
+
+        const buttons = [linkBtn, copyBtn, details].filter(Boolean);
+        if (!buttons.length) return;
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'entry-actions';
+
+        // Find the first element in our list that is currently a child of the entry
+        // to use as an insertion reference, otherwise just append the wrapper.
+        const firstExistingChild = buttons.find(btn => btn.parentNode === entry);
+        if (firstExistingChild) {
+          entry.insertBefore(wrapper, firstExistingChild);
         } else {
-          entry.appendChild(linkButton);
+          entry.appendChild(wrapper);
         }
+
+        buttons.forEach(btn => wrapper.appendChild(btn));
       });
     }
 
-    injectPublicationLinks();
-
-    function injectCopyButtons() {
-      // PERFORMANCE: Create buttons without attaching individual event listeners
-      pubEntries.forEach(entry => {
-        if (entry.querySelector('.copy-btn')) return;
-        const copyBtn = document.createElement('button');
-        copyBtn.className = 'copy-btn';
-        copyBtn.ariaLabel = 'Copy citation to clipboard';
-        copyBtn.title = 'Copy citation';
-        const originalContent = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy`;
-        copyBtn.innerHTML = originalContent;
-
-        const details = entry.querySelector('details'), linkBtn = entry.querySelector('.entry-link-btn');
-        if (linkBtn) linkBtn.parentNode.insertBefore(copyBtn, linkBtn.nextSibling);
-        else if (details) entry.insertBefore(copyBtn, details);
-        else entry.appendChild(copyBtn);
-      });
-    }
-
-    injectCopyButtons();
+    setupEntryActions();
 
     // PERFORMANCE: Use event delegation for dynamically injected copy buttons
     const pubsContainer = document.getElementById('pubs');
@@ -1194,23 +1201,6 @@ For fire managers in the southern region, this study supports the use of prescri
         } catch (err) { console.error('Failed to copy', err); }
       });
     }
-
-    function wrapEntryButtons() {
-      pubEntries.forEach(entry => {
-        if (entry.querySelector('.entry-actions')) return;
-        const linkBtn = entry.querySelector('.entry-link-btn');
-        const copyBtn = entry.querySelector('.copy-btn');
-        const details = entry.querySelector('details');
-        const buttons = [linkBtn, copyBtn, details].filter(Boolean);
-        if (!buttons.length) return;
-        const wrapper = document.createElement('div');
-        wrapper.className = 'entry-actions';
-        entry.insertBefore(wrapper, buttons[0]);
-        buttons.forEach(btn => wrapper.appendChild(btn));
-      });
-    }
-
-    wrapEntryButtons();
 
     // PERFORMANCE: Cache publication text content to avoid DOM reads during search
     // Using a simple array of objects { el: DOMElement, text: string }
