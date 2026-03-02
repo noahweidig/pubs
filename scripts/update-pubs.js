@@ -70,7 +70,8 @@ try {
 const doiRegex = /(?<!doi\.org\/)\b(10\.\d{4,9}\/[-._;()/:A-Z0-9]+)\b/gi;
 // SENTINEL: Exclude quotes to prevent XSS in generated HTML attributes
 const urlRegex = /(?<!href=")(https?:\/\/[^\s<"']+)/gi;
-const hrefRegex = /href="([^"]+)"/i;
+// SENTINEL: Strictly match http/https to prevent XSS via javascript: or data: URIs
+const hrefRegex = /href="(https?:\/\/[^"]+)"/i;
 
 const extractYear = s => (s?.match(/\b(19|20)\d{2}\b/) ? +s.match(/\b(19|20)\d{2}\b/)[0] : 0);
 
