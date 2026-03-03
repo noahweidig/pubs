@@ -1215,16 +1215,31 @@ For fire managers in the southern region, this study supports the use of prescri
     }
 
     // PERFORMANCE: Cache publication text content to avoid DOM reads during search
-    // Using a simple array of objects { el: DOMElement, text: string }
+    // Using a simple array of objects { el: DOMElement, text: string, matches: boolean }
     let pubIndex = [];
     let headingsCache = [];
 
     function buildPubIndex() {
       pubIndex = Array.from(pubEntries).map(entry => ({
         el: entry,
-        text: entry.textContent.toLowerCase()
+        text: entry.textContent.toLowerCase(),
+        matches: true
       }));
-      headingsCache = Array.from(document.querySelectorAll('.type-heading'));
+
+      // PERFORMANCE: Cache the relationship between headings and their entries
+      // to avoid DOM traversal (nextElementSibling) during search filtering
+      headingsCache = Array.from(document.querySelectorAll('.type-heading')).map(heading => {
+        const items = [];
+        let next = heading.nextElementSibling;
+        while (next && !next.classList.contains('type-heading')) {
+          if (next.classList.contains('entry')) {
+            const entryObj = pubIndex.find(e => e.el === next);
+            if (entryObj) items.push(entryObj);
+          }
+          next = next.nextElementSibling;
+        }
+        return { el: heading, items };
+      });
     }
 
     // Build index immediately after injecting buttons
@@ -1238,34 +1253,27 @@ For fire managers in the southern region, this study supports the use of prescri
       // Optimization: Iterating over JS objects is much faster than reading DOM nodes
       // Optimization: Explicitly check current style.display to prevent layout thrashing
       pubIndex.forEach(item => {
-        const matches = item.text.includes(lowerQuery);
-        const targetDisplay = matches ? '' : 'none';
+        item.matches = item.text.includes(lowerQuery);
+        const targetDisplay = item.matches ? '' : 'none';
 
         if (item.el.style.display !== targetDisplay) {
           item.el.style.display = targetDisplay;
         }
 
-        if (matches) {
+        if (item.matches) {
           totalVisible++;
         }
       });
 
       // 2. Hide empty headings
-      headingsCache.forEach(heading => {
-        let next = heading.nextElementSibling;
-        let sectionHasVisible = false;
-
-        while (next && !next.classList.contains('type-heading')) {
-          if (next.classList.contains('entry') && next.style.display !== 'none') {
-            sectionHasVisible = true;
-            break;
-          }
-          next = next.nextElementSibling;
-        }
-
+      // Optimization: Use pre-computed JS object relationships to determine section visibility,
+      // completely eliminating DOM traversal from the search loop.
+      headingsCache.forEach(headingObj => {
+        const sectionHasVisible = headingObj.items.some(item => item.matches);
         const targetDisplay = sectionHasVisible ? '' : 'none';
-        if (heading.style.display !== targetDisplay) {
-          heading.style.display = targetDisplay;
+
+        if (headingObj.el.style.display !== targetDisplay) {
+          headingObj.el.style.display = targetDisplay;
         }
       });
 
