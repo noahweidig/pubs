@@ -930,8 +930,8 @@
         </svg>
       </button>
 
-      <button class="nav-toggle hamburger-toggle" id="menu-toggle" aria-label="Toggle menu" title="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <button class="nav-toggle hamburger-toggle" id="menu-toggle" aria-label="Open menu" title="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line class="line-top" x1="3" y1="6" x2="21" y2="6"></line>
           <line class="line-middle" x1="3" y1="12" x2="21" y2="12"></line>
           <line class="line-bottom" x1="3" y1="18" x2="21" y2="18"></line>
@@ -1082,10 +1082,14 @@ For fire managers in the southern region, this study supports the use of prescri
         mobileMenu.classList.add('is-open');
         menuToggle.classList.add('is-active');
         menuToggle.setAttribute('aria-expanded', 'true');
+        menuToggle.setAttribute('aria-label', 'Close menu');
+        menuToggle.setAttribute('title', 'Close menu');
       } else {
         mobileMenu.classList.remove('is-open');
         menuToggle.classList.remove('is-active');
         menuToggle.setAttribute('aria-expanded', 'false');
+        menuToggle.setAttribute('aria-label', 'Open menu');
+        menuToggle.setAttribute('title', 'Open menu');
       }
     }
 
@@ -1148,8 +1152,8 @@ For fire managers in the southern region, this study supports the use of prescri
         if (!copyBtn) {
           copyBtn = document.createElement('button');
           copyBtn.className = 'copy-btn';
-          copyBtn.ariaLabel = 'Copy citation to clipboard';
           copyBtn.title = 'Copy citation';
+          copyBtn.setAttribute('aria-live', 'polite');
           copyBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy`;
         }
 
