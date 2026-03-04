@@ -1230,6 +1230,11 @@ For fire managers in the southern region, this study supports the use of prescri
         matches: true
       }));
 
+      // PERFORMANCE: Use O(1) Map lookup instead of O(n) array.find inside the loop
+      // to reduce initialization time from O(n²) to O(n).
+      const entryMap = new Map();
+      pubIndex.forEach(item => entryMap.set(item.el, item));
+
       // PERFORMANCE: Cache the relationship between headings and their entries
       // to avoid DOM traversal (nextElementSibling) during search filtering
       headingsCache = Array.from(document.querySelectorAll('.type-heading')).map(heading => {
@@ -1237,7 +1242,7 @@ For fire managers in the southern region, this study supports the use of prescri
         let next = heading.nextElementSibling;
         while (next && !next.classList.contains('type-heading')) {
           if (next.classList.contains('entry')) {
-            const entryObj = pubIndex.find(e => e.el === next);
+            const entryObj = entryMap.get(next);
             if (entryObj) items.push(entryObj);
           }
           next = next.nextElementSibling;

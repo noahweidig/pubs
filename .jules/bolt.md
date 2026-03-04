@@ -13,3 +13,7 @@
 ## 2024-05-18 - [DOM Traversal in Loop Optimization]
 **Learning:** During frequent events like client-side search filtering, querying the DOM via `nextElementSibling` inside a loop can be a significant performance bottleneck and layout-thrashing risk, especially when it relies on DOM structure that is otherwise static.
 **Action:** Replace dynamic DOM traversal with pre-computed JS object relationships (e.g. mapping headings to their corresponding entry items during an initial indexing phase) to ensure visibility toggles operate purely on JS cache lookups.
+
+## 2024-06-25 - [Hash Map Optimization in Search Initialization]
+**Learning:** Initializing the search filter cache (`buildPubIndex`) with a nested loop that calls `array.find()` to map DOM elements back to pre-created cache objects results in an O(n²) time complexity. As the number of DOM elements (publications) grows, this becomes a severe blocking bottleneck on the main thread during initialization.
+**Action:** Replace `O(n)` array searches inside loops with `O(1)` Map lookups (`new Map()`), effectively reducing the initialization phase complexity from `O(n²)` to `O(n)`.
