@@ -9,3 +9,7 @@
 ## 2025-03-04 - Dynamic ARIA Labels for Menu Toggle and Copy Buttons
 **Learning:** For interactive toggle buttons (like the mobile menu), a static `aria-label` ("Toggle menu") does not provide enough context for screen reader users about what the button will do. Additionally, if a button dynamically changes its text (like "Copy" to "Copied!"), a static `aria-label` will override the visible text, preventing screen readers from announcing the state change.
 **Action:** Always implement JavaScript logic to dynamically update `aria-label` and `title` attributes on toggle buttons (e.g., "Open menu" or "Close menu") based on the current state. For buttons with dynamic text changes, remove the static `aria-label` so the accessible name derives from the visible text, and add `aria-live="polite"` to ensure the change is announced. Finally, add `aria-hidden="true"` to decorative SVGs inside buttons.
+
+## 2025-03-05 - Decorative SVGs in Interactive Buttons
+**Learning:** Decorative `<svg>` elements placed within `<button>` tags (such as toggle icons or button graphics) without `aria-hidden="true"` can cause screen readers to announce confusing or redundant information. The button's accessibility should rely solely on its `aria-label` or visible text content.
+**Action:** Always add the `aria-hidden="true"` attribute to any decorative `<svg>` tag contained within interactive elements like buttons or links. Ensure the interactive element itself provides clear context via `aria-label` or inner text.
