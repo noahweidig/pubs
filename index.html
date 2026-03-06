@@ -1115,9 +1115,11 @@ For fire managers in the southern region, this study supports the use of prescri
       }
     });
 
-    // Close mobile menu on resize to desktop
-    window.addEventListener('resize', () => {
-      if (window.innerWidth > 1100) {
+    // PERFORMANCE: Use matchMedia instead of resize event to prevent layout thrashing
+    // This ensures the callback only fires exactly when crossing the breakpoint
+    // instead of triggering continuously dozens of times per second during resize.
+    window.matchMedia('(min-width: 1101px)').addEventListener('change', (e) => {
+      if (e.matches) {
         setMenuState(false);
       }
     });
@@ -1344,15 +1346,16 @@ For fire managers in the southern region, this study supports the use of prescri
 
     // Expand All Logic
     const expandToggle = document.getElementById('expand-toggle');
-    // Get fresh list of details elements
-    const getDetails = () => document.querySelectorAll('details');
+    // PERFORMANCE: Cache list of static details elements instead of running
+    // O(n) document.querySelectorAll on every click or print event
+    const allDetails = document.querySelectorAll('details');
 
     if (expandToggle) {
       expandToggle.addEventListener('click', () => {
         const isExpanded = expandToggle.getAttribute('aria-expanded') === 'true';
         const newState = !isExpanded;
 
-        getDetails().forEach(detail => {
+        allDetails.forEach(detail => {
           if (newState) {
             detail.setAttribute('open', '');
           } else {
@@ -1367,7 +1370,7 @@ For fire managers in the southern region, this study supports the use of prescri
 
       // Automatically expand all abstracts when printing
       window.addEventListener('beforeprint', () => {
-        getDetails().forEach(detail => detail.setAttribute('open', ''));
+        allDetails.forEach(detail => detail.setAttribute('open', ''));
         // Sync button state
         expandToggle.setAttribute('aria-expanded', 'true');
         expandToggle.textContent = 'Collapse All';

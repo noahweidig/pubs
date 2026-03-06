@@ -21,3 +21,7 @@
 ## 2025-02-17 - Pre-render DOM elements to eliminate client-side construction
 **Learning:** Constructing complex and repetitive DOM elements (like copy buttons and wrappers) via client-side JavaScript (`document.createElement`) significantly bloats main-thread execution time and causes layout thrashing, even when batched.
 **Action:** Shift the construction of these elements to the build phase (SSR-like behavior) by updating the generation script to output the complete HTML structures, completely eliminating the need for initialization scripts on the client.
+
+## 2026-03-06 - Resize listeners vs MatchMedia
+**Learning:** Binding UI adjustment functions directly to the `resize` event listener creates a huge performance drain due to near-continuous triggering on the main thread, especially when only specific breakpoints are relevant.
+**Action:** Replace `window.addEventListener('resize', ...)` with `window.matchMedia('(min-width: ...)').addEventListener('change', ...)` to completely eliminate redundant checks, only executing code precisely when the target screen threshold is crossed.
