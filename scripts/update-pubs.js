@@ -76,9 +76,10 @@ const hrefRegex = /href="(https?:\/\/[^"]+)"/i;
 const extractYear = s => (s?.match(/\b(19|20)\d{2}\b/) ? +s.match(/\b(19|20)\d{2}\b/)[0] : 0);
 
 function linkify(t) {
+  // SENTINEL: Use replacer functions to prevent string injection attacks from user-controlled URLs containing $&, $', etc.
   return t
-    .replace(doiRegex, '<a href="https://doi.org/$1" target="_blank" rel="noopener noreferrer">$1</a>')
-    .replace(urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+    .replace(doiRegex, (match, p1) => `<a href="https://doi.org/${p1}" target="_blank" rel="noopener noreferrer">${p1}</a>`)
+    .replace(urlRegex, (match, p1) => `<a href="${p1}" target="_blank" rel="noopener noreferrer">${p1}</a>`);
 }
 
 function categorize(it) {
@@ -135,7 +136,8 @@ let pubs = typeOrder
   )
   .join("");
 
-pubs = pubs.replace(/Weidig,\s*N\.?\s*C\.?/g, "<strong>$&</strong>");
+// SENTINEL: Use replacer function to prevent injection from user-controlled data containing replacement patterns (e.g., $', $&)
+pubs = pubs.replace(/Weidig,\s*N\.?\s*C\.?/g, (match) => `<strong>${match}</strong>`);
 
 let indexFile = fs.readFileSync(indexPath, "utf8");
 
