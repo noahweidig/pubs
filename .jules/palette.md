@@ -1,15 +1,3 @@
-## 2025-03-01 - Dynamic ARIA Labels for Theme Toggle
-**Learning:** For interactive toggle buttons (like theme switches), static `aria-label` and `title` attributes ("Toggle theme") do not provide enough context for screen reader or mouse users about the resulting action.
-**Action:** Always implement JavaScript logic to dynamically update `aria-label` and `title` attributes on toggle buttons to explicitly state the *next* state or action (e.g., "Switch to light theme" or "Switch to dark theme") based on the current active state. Ensure the default HTML matches the default active state.
-
-## 2025-03-03 - Dynamic ARIA Labels for Search Toggle and Announcements
-**Learning:** Interactive toggles that open overlays (like search) often miss `aria-expanded` and `aria-controls` state synchronization, causing screen readers to silently ignore when overlays appear/disappear. Furthermore, real-time client-side search updates are invisible to screen readers without an `aria-live` announcement region, making the dynamic functionality inaccessible.
-**Action:** Always synchronize `aria-expanded` state on toggle buttons connected to overlays, and introduce a visually hidden `aria-live="polite"` element that announces result counts for dynamic in-page search filtering.
-
-## 2025-03-04 - Dynamic ARIA Labels for Menu Toggle and Copy Buttons
-**Learning:** For interactive toggle buttons (like the mobile menu), a static `aria-label` ("Toggle menu") does not provide enough context for screen reader users about what the button will do. Additionally, if a button dynamically changes its text (like "Copy" to "Copied!"), a static `aria-label` will override the visible text, preventing screen readers from announcing the state change.
-**Action:** Always implement JavaScript logic to dynamically update `aria-label` and `title` attributes on toggle buttons (e.g., "Open menu" or "Close menu") based on the current state. For buttons with dynamic text changes, remove the static `aria-label` so the accessible name derives from the visible text, and add `aria-live="polite"` to ensure the change is announced. Finally, add `aria-hidden="true"` to decorative SVGs inside buttons.
-
-## 2025-03-05 - Decorative SVGs in Interactive Buttons
-**Learning:** Decorative `<svg>` elements placed within `<button>` tags (such as toggle icons or button graphics) without `aria-hidden="true"` can cause screen readers to announce confusing or redundant information. The button's accessibility should rely solely on its `aria-label` or visible text content.
-**Action:** Always add the `aria-hidden="true"` attribute to any decorative `<svg>` tag contained within interactive elements like buttons or links. Ensure the interactive element itself provides clear context via `aria-label` or inner text.
+## 2024-05-24 - Skip Link Target Needs tabindex="-1"
+**Learning:** For 'Skip to content' links to function correctly for keyboard navigation, the target element (e.g., `<main id="main-content">`) must explicitly have `tabindex="-1"`. Without this, clicking the link scrolls the page visually, but keyboard focus remains at the top of the document, defeating the accessibility purpose.
+**Action:** When adding or reviewing skip links, always ensure the target element has `tabindex="-1"` and a corresponding CSS rule `#{target_id}:focus { outline: none; }` to prevent unwanted focus rings upon programmatic activation.
