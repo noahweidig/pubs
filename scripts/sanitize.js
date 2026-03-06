@@ -13,12 +13,12 @@ export function sanitizeHtml(html) {
     },
     allowedStyles: {
       '*': {
-        // Allow specific properties used by CSL styles
-        'line-height': [/.*/],
-        'padding-left': [/.*/],
-        'text-indent': [/.*/],
-        'font-style': [/.*/],
-        'font-weight': [/.*/]
+        // Allow specific properties used by CSL styles, preventing XSS via url() or expression()
+        'line-height': [/^(?!.*(?:url|expression)\s*\().*$/i],
+        'padding-left': [/^(?!.*(?:url|expression)\s*\().*$/i],
+        'text-indent': [/^(?!.*(?:url|expression)\s*\().*$/i],
+        'font-style': [/^(?!.*(?:url|expression)\s*\().*$/i],
+        'font-weight': [/^(?!.*(?:url|expression)\s*\().*$/i]
       }
     },
     allowedSchemes: [ 'http', 'https', 'mailto' ],
