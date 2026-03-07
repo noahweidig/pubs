@@ -25,3 +25,6 @@
 ## 2026-03-06 - Resize listeners vs MatchMedia
 **Learning:** Binding UI adjustment functions directly to the `resize` event listener creates a huge performance drain due to near-continuous triggering on the main thread, especially when only specific breakpoints are relevant.
 **Action:** Replace `window.addEventListener('resize', ...)` with `window.matchMedia('(min-width: ...)').addEventListener('change', ...)` to completely eliminate redundant checks, only executing code precisely when the target screen threshold is crossed.
+## 2025-02-17 - Eliminate redundant client-side DOM node recreation in dynamic components
+**Learning:** Reconstructing the DOM dynamically with `document.createElement`, `document.createTextNode`, and `.appendChild` over and over again for dynamic UI feedback (like a changing "No results" search query text and a static button) causes unnecessary main-thread overhead, repeated memory allocations for identical elements, and potential layout thrashing.
+**Action:** Pre-render the HTML structure of the dynamic component and use JavaScript solely to update its display state and the text content of its specific changing parts (like an inner `<span>`), completely avoiding DOM node recreation.
