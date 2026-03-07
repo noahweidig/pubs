@@ -12,3 +12,8 @@
 **Vulnerability:** Hardcoded external links in `index.html` (e.g., for the "Blog" navigation links) were using `target="_blank"` without the `rel="noopener noreferrer"` attribute. This exposed the application to reverse tabnabbing, where the newly opened tab could manipulate the `window.opener` object of the original page to redirect it to a malicious site.
 **Learning:** While the backend script (`scripts/sanitize.js`) was correctly adding `rel="noopener noreferrer"` to dynamically injected `target="_blank"` links from Zotero, the static HTML files were overlooked.
 **Prevention:** Always ensure that any `<a target="_blank">` tag, whether dynamically generated or hardcoded in static HTML files, includes `rel="noopener noreferrer"` to protect against reverse tabnabbing.
+
+## 2025-03-07 - XSS in Inline Styles
+**Vulnerability:** Inline styles from Zotero could contain URLs that execute JavaScript.
+**Learning:** `sanitize-html` does not block `url()` from inline CSS values unless explicitly filtered.
+**Prevention:** Filter out `url()` and expressions from allowed style attributes or use strict regex.
