@@ -113,7 +113,8 @@ items.forEach(it => {
     year: extractYear(it.data.date),
     bib: safeBib,
     abs: escapeHtml(it.data.abstractNote),
-    link: safeBib.match(hrefRegex)?.[1] || ""
+    link: safeBib.match(hrefRegex)?.[1] || "",
+    title: escapeHtml(it.data.title || "")
   });
 });
 
@@ -126,7 +127,7 @@ let pubs = typeOrder
     grouped[type]
       .sort((a, b) => b.year - a.year)
       .map(e => {
-        const linkBtn = e.link ? `<a class="entry-link-btn" href="${e.link}" target="_blank" rel="noopener noreferrer">Open Link</a>` : "";
+        const linkBtn = e.link ? `<a class="entry-link-btn" href="${e.link}" target="_blank" rel="noopener noreferrer" aria-label="Open link to: ${e.title}">Open Link</a>` : "";
         const copyBtn = `<button class="copy-btn" title="Copy citation" aria-live="polite"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy</button>`;
         const details = e.abs ? `<details><summary>Abstract</summary><p>${e.abs}</p></details>` : "";
         const actions = (linkBtn || details) ? `<div class="entry-actions">${linkBtn}${copyBtn}${details}</div>` : `<div class="entry-actions">${copyBtn}</div>`;
