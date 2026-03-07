@@ -1033,7 +1033,8 @@ For fire managers in the southern region, this study supports the use of prescri
 </div><div class="entry-actions"><a class="entry-link-btn" href="https://news.agu.org/press-release/shrub-growth-fuels-eastern-wildfires/." target="_blank" rel="noopener noreferrer" aria-label="Open link to: Wildfire surges in East, Southeast US fueled by new trees and shrubs">Open Link</a><button class="copy-btn" title="Copy citation" aria-live="polite"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy</button><details><summary>Abstract</summary><p>Woody vegetation has increased by 37% over the last 30 years in the eastern United States, fueling the rise in large wildfires. Texas and the Appalachian Mountains took the biggest hits.</p></details></div></div>
 <!-- END PUBS -->
       <div id="search-no-results" class="no-results" role="status" aria-live="polite">
-        No publications found matching your search.
+        No publications found matching "<strong id="search-query-display"></strong>".
+        <button id="search-clear-no-results" style="background: none; border: none; padding: 0; color: var(--link-color); text-decoration: underline; cursor: pointer; font-size: inherit; font-family: inherit;">Clear search</button>
       </div>
     </div>
   </main>
@@ -1255,28 +1256,8 @@ For fire managers in the southern region, this study supports the use of prescri
         if (announcer) announcer.textContent = '';
         if (noResults) {
           noResults.style.display = 'block';
-          noResults.innerHTML = '';
-
-          const text1 = document.createTextNode('No publications found matching "');
-          const strong = document.createElement('strong');
-          strong.textContent = query;
-          const text2 = document.createTextNode('". ');
-
-          const clearBtn = document.createElement('button');
-          clearBtn.textContent = 'Clear search';
-          // Inline styles to avoid adding new CSS classes
-          clearBtn.style.cssText = 'background: none; border: none; padding: 0; color: var(--link-color); text-decoration: underline; cursor: pointer; font-size: inherit; font-family: inherit;';
-
-          clearBtn.addEventListener('click', () => {
-            searchInput.value = '';
-            filterPubs('');
-            searchInput.focus();
-          });
-
-          noResults.appendChild(text1);
-          noResults.appendChild(strong);
-          noResults.appendChild(text2);
-          noResults.appendChild(clearBtn);
+          const queryDisplay = document.getElementById('search-query-display');
+          if (queryDisplay) queryDisplay.textContent = query;
         }
       }
     }
@@ -1343,6 +1324,16 @@ For fire managers in the southern region, this study supports the use of prescri
       filterPubs('');
       searchInput.focus();
     });
+
+    const searchClearNoResults = document.getElementById('search-clear-no-results');
+    if (searchClearNoResults) {
+      searchClearNoResults.addEventListener('click', () => {
+        searchInput.value = '';
+        searchClear.hidden = true;
+        filterPubs('');
+        searchInput.focus();
+      });
+    }
 
     // Expand All Logic
     const expandToggle = document.getElementById('expand-toggle');
