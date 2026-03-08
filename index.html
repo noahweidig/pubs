@@ -674,6 +674,23 @@
     .copy-btn svg { width: 14px; height: 14px; opacity: 0.7; stroke-width: 2px; }
     .copy-btn.copied { color: var(--accent-secondary); border-color: var(--accent-secondary); background: rgba(7, 122, 112, 0.1); }
 
+    .page-header {
+      margin-bottom: 3rem;
+    }
+    .page-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+      color: var(--text-color);
+    }
+    .page-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 650px;
+      line-height: 1.6;
+    }
+
     .controls-wrapper {
       display: flex;
       justify-content: flex-end;
@@ -967,6 +984,11 @@
 
   <!-- Publications -->
   <main class="main-wrapper" id="main-content" tabindex="-1">
+    <header class="page-header">
+      <h1 class="page-title">Research &amp; Publications</h1>
+      <p class="page-subtitle">Explore my work on wildfire ecology, landscape dynamics, and the wildland-urban interface.</p>
+    </header>
+
     <div id="pubs">
       <div class="controls-wrapper">
         <button id="expand-toggle" aria-expanded="false" aria-label="Expand all abstracts">Expand All</button>
