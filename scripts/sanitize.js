@@ -26,7 +26,8 @@ export function sanitizeHtml(html) {
     allowProtocolRelative: false,
     transformTags: {
       'a': (tagName, attribs) => {
-        if (attribs.target === '_blank') {
+        // SENTINEL: Enforce noopener noreferrer on any non-self target to prevent reverse tabnabbing via custom window names
+        if (attribs.target && !['_self', '_parent', '_top'].includes(attribs.target.toLowerCase())) {
           return {
             tagName: 'a',
             attribs: {
