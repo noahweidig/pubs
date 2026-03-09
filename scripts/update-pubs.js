@@ -84,7 +84,7 @@ function linkify(t) {
 
 function categorize(it) {
   const t = it.data.itemType;
-  if (t === "journalArticle") return "Publications";
+  if (t === "journalArticle") return "Journal Articles";
   if (t === "presentation" || t === "conferencePaper") return "Presentations";
   if (t === "thesis") return "Thesis";
   if (t === "preprint" || /referee report/i.test(it.data.title || "")) return "Peer Reviews";
@@ -118,7 +118,7 @@ items.forEach(it => {
   });
 });
 
-const typeOrder = ["Publications","Presentations","Thesis","Peer Reviews","Media Coverage"];
+const typeOrder = ["Journal Articles","Presentations","Thesis","Peer Reviews","Media Coverage"];
 
 let pubs = typeOrder
   .filter(type => grouped[type])
@@ -127,7 +127,7 @@ let pubs = typeOrder
     grouped[type]
       .sort((a, b) => b.year - a.year)
       .map(e => {
-        const linkBtn = e.link ? `<a class="entry-link-btn" href="${e.link}" target="_blank" rel="noopener noreferrer" aria-label="Open link to: ${e.title}">Open Link</a>` : "";
+        const linkBtn = e.link ? `<a class="entry-link-btn" href="${e.link}" target="_blank" rel="noopener noreferrer" aria-label="Open link to: ${e.title}">View Online</a>` : "";
         const copyBtn = `<button class="copy-btn" title="Copy citation" aria-live="polite"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy</button>`;
         const details = e.abs ? `<details><summary>Abstract</summary><p>${e.abs}</p></details>` : "";
         const actions = (linkBtn || details) ? `<div class="entry-actions">${linkBtn}${copyBtn}${details}</div>` : `<div class="entry-actions">${copyBtn}</div>`;
