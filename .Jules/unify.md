@@ -4,3 +4,6 @@
 ## 2025-05-18 - Repeated Terminology in Hierarchy
 **Learning:** Using the same term ("Publications") for both the top-level page heading (<h1> equivalent) and a sub-section (<h2> equivalent) creates a confusing, repetitive hierarchy.
 **Action:** Ensure sub-sections use more specific terminology (e.g., "Journal Articles") than their parent sections to clearly delineate the content structure and maintain narrative progression.
+## 2025-05-18 - Semantic Flow and Explicit CTAs
+**Learning:** Organizing publication content so that major written works (Thesis, Journal Articles) precede presentations or media provides a clearer logical arc for the user. Additionally, abstract buttons labeled simply "Expand All" lack contextual meaning compared to explicit labels like "Expand all abstracts," which removes ambiguity. Replacing generic container divs (`<div class="type-heading">`) with semantic heading tags (`<h2 class="type-heading">`) ensures the document outline matches the visual hierarchy, improving accessibility and overall cohesion.
+**Action:** Order content logically by primary value. Use specific CTA text matching user intent. Maintain a semantic HTML document structure with appropriate heading levels beneath the main page heading (`<h1>`).

@@ -118,12 +118,12 @@ items.forEach(it => {
   });
 });
 
-const typeOrder = ["Journal Articles","Presentations","Thesis","Peer Reviews","Media Coverage"];
+const typeOrder = ["Journal Articles","Thesis","Presentations","Peer Reviews","Media Coverage"];
 
 let pubs = typeOrder
   .filter(type => grouped[type])
   .map(type =>
-    `<div class="type-heading">${type}</div>` +
+    `<h2 class="type-heading">${type}</h2>` +
     grouped[type]
       .sort((a, b) => b.year - a.year)
       .map(e => {

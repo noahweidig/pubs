@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       node-fetch:
-        specifier: '3'
+        specifier: ^3.3.2
         version: 3.3.2
       sanitize-html:
         specifier: ^2.17.1
