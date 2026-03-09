@@ -1229,6 +1229,10 @@ For fire managers in the southern region, this study supports the use of prescri
     // Build index immediately after injecting buttons
     buildPubIndex();
 
+    const noResults = document.getElementById('search-no-results');
+    const announcer = document.getElementById('search-announcer');
+    const queryDisplay = document.getElementById('search-query-display');
+
     function filterPubs(query) {
       const lowerQuery = query.toLowerCase();
       let totalVisible = 0;
@@ -1262,24 +1266,21 @@ For fire managers in the southern region, this study supports the use of prescri
       });
 
       // 3. Show/hide "No results" and announce search count
-      const noResults = document.getElementById('search-no-results');
-      const announcer = document.getElementById('search-announcer');
 
       if (totalVisible > 0) {
-        if (noResults) noResults.style.display = 'none';
+        if (noResults && noResults.style.display !== 'none') noResults.style.display = 'none';
         if (announcer) {
-          if (query) {
-            announcer.textContent = `${totalVisible} publication${totalVisible === 1 ? '' : 's'} found.`;
-          } else {
-            announcer.textContent = '';
-          }
+          const newAnnouncerText = query ? `${totalVisible} publication${totalVisible === 1 ? '' : 's'} found.` : '';
+          if (announcer.textContent !== newAnnouncerText) announcer.textContent = newAnnouncerText;
         }
       } else {
-        if (announcer) announcer.textContent = query ? '0 publications found.' : '';
+        if (announcer) {
+          const newAnnouncerText = query ? '0 publications found.' : '';
+          if (announcer.textContent !== newAnnouncerText) announcer.textContent = newAnnouncerText;
+        }
         if (noResults) {
-          noResults.style.display = 'block';
-          const queryDisplay = document.getElementById('search-query-display');
-          if (queryDisplay) queryDisplay.textContent = query;
+          if (noResults.style.display !== 'block') noResults.style.display = 'block';
+          if (queryDisplay && queryDisplay.textContent !== query) queryDisplay.textContent = query;
         }
       }
     }
