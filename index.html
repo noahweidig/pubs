@@ -1431,6 +1431,12 @@ For fire managers in the southern region, this study supports the use of prescri
           top: 0,
           behavior: 'smooth'
         });
+
+        // Reset keyboard focus to the top of the document
+        const skipLink = document.querySelector('.skip-link');
+        if (skipLink) {
+          skipLink.focus({ preventScroll: true });
+        }
       });
     }
   </script>

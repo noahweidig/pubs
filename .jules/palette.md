@@ -9,3 +9,7 @@
 ## 2025-03-08 - Announcing Zero Results in Live Regions
 **Learning:** Clearing the text content of an `aria-live` region when a search returns 0 results leaves screen reader users in silence, making it ambiguous whether the search finished or is just broken.
 **Action:** When a dynamic filter returns 0 matches, explicitly set the `aria-live` element's text content to "0 results found." (or similar) rather than an empty string, so users get definitive feedback.
+
+## 2026-03-08 - Managing Focus for "Back to Top" Buttons
+**Learning:** A "Back to Top" button that only scrolls the page visually breaks keyboard navigation, because the programmatic focus is left at the bottom of the document. Keyboard users tabbing after scrolling up will instantly jump back down to where they were.
+**Action:** When implementing a "Back to Top" button, ensure that programmatic focus is reset to the top of the document (e.g., focusing the skip link with `preventScroll: true`) to preserve logical tab order and a seamless navigation experience.
