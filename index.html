@@ -1370,9 +1370,12 @@ For fire managers in the southern region, this study supports the use of prescri
         const newState = !isExpanded;
 
         allDetails.forEach(detail => {
-          if (newState) {
+          // PERFORMANCE: Explicitly check current state before modifying DOM attributes
+          // to prevent redundant writes and layout thrashing.
+          const isOpen = detail.hasAttribute('open');
+          if (newState && !isOpen) {
             detail.setAttribute('open', '');
-          } else {
+          } else if (!newState && isOpen) {
             detail.removeAttribute('open');
           }
         });
@@ -1384,7 +1387,12 @@ For fire managers in the southern region, this study supports the use of prescri
 
       // Automatically expand all abstracts when printing
       window.addEventListener('beforeprint', () => {
-        allDetails.forEach(detail => detail.setAttribute('open', ''));
+        allDetails.forEach(detail => {
+          // PERFORMANCE: Guard against redundant DOM attribute writes.
+          if (!detail.hasAttribute('open')) {
+            detail.setAttribute('open', '');
+          }
+        });
         // Sync button state
         expandToggle.setAttribute('aria-expanded', 'true');
         expandToggle.textContent = 'Collapse all abstracts';
