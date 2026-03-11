@@ -1171,11 +1171,11 @@ For fire managers in the southern region, this study supports the use of prescri
         let text = '';
         const bibBody = entry.querySelector('.csl-bib-body');
         if (bibBody) {
-          text = bibBody.innerText;
+          text = bibBody.textContent;
         } else {
           const clone = entry.cloneNode(true);
           clone.querySelectorAll('button, a.entry-link-btn, details').forEach(el => el.remove());
-          text = clone.innerText;
+          text = clone.textContent;
         }
         text = text.trim().replace(/\s+/g, ' ');
 
