@@ -36,3 +36,7 @@
 ## 2026-03-10 - Avoid redundant attribute writes in DOM iterations
 **Learning:** Unconditionally modifying DOM element attributes inside loops (e.g., repeatedly calling `setAttribute('open', '')` on all `<details>` elements during an 'Expand All' or 'Collapse All' event) forces the browser to evaluate potential updates and can trigger unnecessary rendering overhead, even if the element already possesses the target attribute state.
 **Action:** When iterating over a collection of DOM nodes to toggle properties or attributes, explicitly check the current state (like `hasAttribute('open')`) to prevent redundant DOM writes and potential layout thrashing.
+
+## 2025-03-11 - Avoid innerText for text extraction
+**Learning:** Using `innerText` to extract text from DOM elements (like publication citations) forces the browser to calculate the CSS layout to determine visibility, causing an expensive, synchronous reflow (layout thrashing).
+**Action:** Use `textContent` instead of `innerText` whenever extracting text for logical operations (like copying to clipboard), as it simply reads the DOM tree without triggering layout calculations.
