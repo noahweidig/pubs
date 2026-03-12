@@ -13,3 +13,7 @@
 ## 2026-03-08 - Managing Focus for "Back to Top" Buttons
 **Learning:** A "Back to Top" button that only scrolls the page visually breaks keyboard navigation, because the programmatic focus is left at the bottom of the document. Keyboard users tabbing after scrolling up will instantly jump back down to where they were.
 **Action:** When implementing a "Back to Top" button, ensure that programmatic focus is reset to the top of the document (e.g., focusing the skip link with `preventScroll: true`) to preserve logical tab order and a seamless navigation experience.
+
+## 2026-03-08 - Synchronizing tooltips with dynamic text changes
+**Learning:** When a button's visible text dynamically changes to indicate a state (like "Copy" -> "Copied!"), its `title` attribute (if present) must be updated as well. Otherwise, hovering over the button shows a conflicting tooltip, and screen readers relying on `title` as a fallback accessible name will announce the outdated label instead of the new state.
+**Action:** When adding state changes to buttons with tooltips, always update and restore the `title` attribute synchronously with the `textContent` or `innerHTML`.
