@@ -523,9 +523,13 @@
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 14px;
-      transition: all 0.3s ease;
+      /* PERFORMANCE: Explicit transitions instead of 'all' to prevent accidental layout thrashing */
+      transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
+      /* PERFORMANCE: Defer rendering of off-screen publication cards to drastically improve initial page load and scrolling frame rates */
+      content-visibility: auto;
+      contain-intrinsic-size: auto 200px;
     }
 
     .entry:hover {

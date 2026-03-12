@@ -40,3 +40,7 @@
 ## 2025-03-11 - Avoid innerText for text extraction
 **Learning:** Using `innerText` to extract text from DOM elements (like publication citations) forces the browser to calculate the CSS layout to determine visibility, causing an expensive, synchronous reflow (layout thrashing).
 **Action:** Use `textContent` instead of `innerText` whenever extracting text for logical operations (like copying to clipboard), as it simply reads the DOM tree without triggering layout calculations.
+
+## 2026-03-22 - Deferring Static UI Rendering with Content-Visibility
+**Learning:** For a single-page application heavily reliant on large, static HTML lists (e.g., academic publications generated server-side), rendering the entire list blocks the main thread on initial load, inflating Time to Interactive (TTI) and First Contentful Paint (FCP). Modifying broad CSS transitions (`transition: all`) concurrently causes excessive rendering computations as the browser struggles to evaluate changes across the giant node tree.
+**Action:** Replace `transition: all` with explicitly defined CSS transition properties, and add `content-visibility: auto` paired with an estimated `contain-intrinsic-size` on list items. This forces the browser to defer painting off-screen elements until they approach the viewport, drastically reducing initial paint workload and smoothing scroll frame rates without requiring JS-based virtualization.
