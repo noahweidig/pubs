@@ -78,6 +78,14 @@ const hrefRegex = /href="(https?:\/\/[^"]+)"/i;
 
 const extractYear = s => (s?.match(/\b(19|20)\d{2}\b/) ? +s.match(/\b(19|20)\d{2}\b/)[0] : 0);
 
+function normalizeBibDate(bib, rawDate) {
+  const year = extractYear(rawDate) || extractYear(bib);
+  if (!year) return bib;
+
+  // Normalize Zotero's mixed date styles (e.g., "(2025, April)", "(2025, Nov 19)") to a single output format: "(YYYY)".
+  return bib.replace(/\([^()]*\b(?:19|20)\d{2}\b[^()]*\)/, `(${year})`);
+}
+
 function linkify(t) {
   // SENTINEL: Use replacer functions to prevent string injection attacks from user-controlled URLs containing $&, $', etc.
   return t
@@ -114,7 +122,8 @@ items.forEach(it => {
   const type = categorize(it);
   grouped[type] ??= [];
   // SENTINEL: Linkify BEFORE sanitization to ensure injected tags are parsed and sanitized safely
-  const linkedBib = linkify(it.bib);
+  const normalizedBib = normalizeBibDate(it.bib, it.data.date);
+  const linkedBib = linkify(normalizedBib);
   const safeBib = sanitizeHtml(linkedBib);
   grouped[type].push({
     year: extractYear(it.data.date),
