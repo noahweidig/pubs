@@ -157,4 +157,4 @@ indexFile = indexFile.replace(
 
 fs.writeFileSync(indexPath, indexFile);
 
-console.log("✅ Publications injected into index.html");
+console.log("✅ Research injected into index.html");

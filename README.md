@@ -1,20 +1,20 @@
 <div align="center">
 
-<img src="verification_hero.png" alt="Noah Weidig — Publications" width="100%" />
+<img src="verification_hero.png" alt="Noah Weidig — Research" width="100%" />
 
 <br><br>
 
-# Noah Weidig · Publications
+# Noah Weidig · Research
 
 **Wildfire ecology, landscape dynamics, and the wildland-urban interface.**
 
-[![Live Site](https://img.shields.io/badge/noahweidig.github.io-Publications-a78bfa?style=for-the-badge&logo=github)](https://noahweidig.github.io/pubs)
+[![Live Site](https://img.shields.io/badge/noahweidig.github.io-Research-a78bfa?style=for-the-badge&logo=github)](https://noahweidig.github.io/pubs)
 
 </div>
 
 <br>
 
-This repository powers the **Publications** section of my personal site. A scheduled GitHub Action pulls citation data from my [Zotero](https://www.zotero.org/) library, renders it into a static page, and deploys it to GitHub Pages — no client-side API calls, no JavaScript frameworks, just fast, clean HTML.
+This repository powers the **Research** section of my personal site. A scheduled GitHub Action pulls citation data from my [Zotero](https://www.zotero.org/) library, renders it into a static page, and deploys it to GitHub Pages — no client-side API calls, no JavaScript frameworks, just fast, clean HTML.
 
 <br>
 
@@ -36,7 +36,7 @@ Visitors never hit an external API. The page loads instantly and works offline.
 
 | Layer | Details |
 |------:|:--------|
-| **Data** | [Zotero Web API v3](https://www.zotero.org/support/dev/web_api/v3/start) — My Publications collection |
+| **Data** | [Zotero Web API v3](https://www.zotero.org/support/dev/web_api/v3/start) — My Research collection |
 | **Build** | Node.js script with `node-fetch` + `sanitize-html` |
 | **CI/CD** | GitHub Actions on a 14-day cron schedule |
 | **Hosting** | GitHub Pages — zero cost, zero maintenance |
