@@ -32,3 +32,8 @@
 **Vulnerability:** The application was lacking a Content Security Policy (CSP), meaning if any client-side injection attacks were successful (e.g. bypassing the HTML sanitizer via CSS execution), attackers could exfiltrate data or load arbitrary malicious scripts and assets.
 **Learning:** Static sites lacking backend infrastructure can easily benefit from a powerful layer of security via a strict `<meta http-equiv="Content-Security-Policy">` tag.
 **Prevention:** Always implement a strict CSP that explicitly locks down `default-src 'none'`, restricts scripts to required origins or hashes/unsafe-inline (if unavoidable), blocks objects (`object-src 'none'`), locks base URIs (`base-uri 'none'`), and blocks out-of-band requests (`connect-src 'none'`) to significantly limit the impact of any potential client-side vulnerability.
+
+## 2025-03-12 - [Information Leakage in API Errors]
+**Vulnerability:** The application was vulnerable to information leakage in its CI/CD logs because it directly interpolated the raw `payload` from failed Zotero API responses into `Error` messages. If the API endpoint changed its behavior to return internal server details or if the application sent sensitive request data that was echoed back, this information would be exposed in the GitHub Actions build logs.
+**Learning:** Raw response payloads from external APIs should never be directly thrown as errors or logged without sanitization, as they can expose sensitive information or internal stack traces.
+**Prevention:** Always fail securely by truncating raw payloads in error messages or replacing them with generic error indicators (e.g., just the HTTP status code), ensuring that CI/CD logs do not become an unintended attack surface for information gathering.

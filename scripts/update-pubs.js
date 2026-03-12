@@ -39,7 +39,8 @@ const fetchWithRetry = async (url, { attempts = 3, delayMs = 1_000 } = {}) => {
         continue;
       }
 
-      throw new Error(`❌ Zotero API error (${response.status}): ${payload}`);
+      // SENTINEL: Do not leak raw response payloads in error messages
+      throw new Error(`❌ Zotero API error (${response.status})`);
     } catch (err) {
       lastError = err;
 
@@ -56,7 +57,8 @@ const fetchWithRetry = async (url, { attempts = 3, delayMs = 1_000 } = {}) => {
     }
   }
 
-  throw new Error(`❌ Zotero API error after ${attempts} attempts: ${lastPayload || lastError}`);
+  // SENTINEL: Do not leak raw response payloads in error messages
+  throw new Error(`❌ Zotero API error after ${attempts} attempts: ${lastError?.message || "Transient failure"}`);
 };
 
 const payload = await fetchWithRetry(url);
@@ -65,7 +67,8 @@ let items;
 try {
   items = JSON.parse(payload);
 } catch (err) {
-  throw new Error(`❌ Unexpected Zotero API response: ${payload}`);
+  // SENTINEL: Do not leak raw response payloads in error messages
+  throw new Error(`❌ Unexpected Zotero API response (could not parse JSON).`);
 }
 const doiRegex = /(?<!doi\.org\/)\b(10\.\d{4,9}\/[-._;()/:A-Z0-9]+)\b/gi;
 // SENTINEL: Exclude quotes to prevent XSS in generated HTML attributes
