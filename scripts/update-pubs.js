@@ -87,6 +87,10 @@ function linkify(t) {
 
 function categorize(it) {
   const t = it.data.itemType;
+  const webinarText = [it.data.title, it.data.event, it.data.genre, it.bib]
+    .filter(Boolean)
+    .join(" ");
+  if (/\bwebinar\b/i.test(webinarText)) return "Webinars";
   if (t === "journalArticle") return "Journal Articles";
   if (t === "presentation" || t === "conferencePaper") return "Presentations";
   if (t === "thesis") return "Thesis";
@@ -117,11 +121,12 @@ items.forEach(it => {
     bib: safeBib,
     abs: escapeHtml(it.data.abstractNote),
     link: safeBib.match(hrefRegex)?.[1] || "",
-    title: escapeHtml(it.data.title || "")
+    title: escapeHtml(it.data.title || ""),
+    isWebinar: type === "Webinars"
   });
 });
 
-const typeOrder = ["Journal Articles","Thesis","Presentations","Peer Reviews","Media Coverage"];
+const typeOrder = ["Journal Articles","Thesis","Presentations","Webinars","Peer Reviews","Media Coverage"];
 
 let pubs = typeOrder
   .filter(type => grouped[type])
@@ -130,7 +135,10 @@ let pubs = typeOrder
     grouped[type]
       .sort((a, b) => b.year - a.year)
       .map(e => {
-        const linkBtn = e.link ? `<a class="entry-link-btn" href="${e.link}" target="_blank" rel="noopener noreferrer" aria-label="View Online: ${e.title}">View Online</a>` : "";
+        const linkBtnText = e.isWebinar ? "Watch Now" : "View Online";
+        const linkBtnLabel = e.isWebinar ? "Watch webinar" : "View Online";
+        const linkBtnClass = e.isWebinar ? "entry-link-btn webinar-link-btn" : "entry-link-btn";
+        const linkBtn = e.link ? `<a class="${linkBtnClass}" href="${e.link}" target="_blank" rel="noopener noreferrer" aria-label="${linkBtnLabel}: ${e.title}">${linkBtnText}</a>` : "";
         const copyBtn = `<button class="copy-btn" title="Copy citation" aria-live="polite"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy</button>`;
         const details = e.abs ? `<details><summary>Summary</summary><p>${e.abs}</p></details>` : "";
         const actions = (linkBtn || details) ? `<div class="entry-actions">${linkBtn}${copyBtn}${details}</div>` : `<div class="entry-actions">${copyBtn}</div>`;
